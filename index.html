@@ -937,7 +937,10 @@ const parsed = JSON.parse(jsonMatch[0]);
             document.getElementById('quiz-next-btn').innerText = activeQuizIndex === currentQuizData.length - 1 ? 'Sınavı Bitir' : 'Sonraki ▶';
         }
 
-        window.selectOption = function(prefix) { activeQuizAnswers[activeQuizIndex] = prefix; showQuestion(); };
+        window.selectOption = function(prefix) {
+    alert("ÇALIŞTI");
+    activeQuizAnswers[activeQuizIndex] = prefix;
+    showQuestion();
         window.prevQuestion = function() { if (activeQuizIndex > 0) { activeQuizIndex--; showQuestion(); } };
         window.nextQuestion = function() {
             if (activeQuizIndex < currentQuizData.length - 1) { activeQuizIndex++; showQuestion(); }
