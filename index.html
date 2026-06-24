@@ -924,7 +924,8 @@ const parsed = JSON.parse(jsonMatch[0]);
         }
 
         window.selectOption = function(prefix) {
-
+        console.log("Seçilen:", prefix);
+        console.log("Doğru:", q.correctAnswer);
     const q = currentQuizData[activeQuizIndex];
 
     activeQuizAnswers[activeQuizIndex] = prefix;
@@ -933,21 +934,20 @@ const parsed = JSON.parse(jsonMatch[0]);
 
     buttons.forEach(btn => btn.disabled = true);
 
-    buttons.forEach(btn => {
+    buttons.forEach((btn, index) => {
 
-        const letter = btn.querySelector('span').innerText;
+    const letter = ['A','B','C','D','E'][index];
 
-        if(letter === q.correctAnswer){
-            btn.classList.add('bg-green-100','border-green-500');
-        }
+    if(letter === q.correctAnswer){
+        btn.classList.add('bg-green-100','border-green-500');
+    }
 
-        if(letter === prefix && prefix !== q.correctAnswer){
-            btn.classList.add('bg-red-100','border-red-500');
-        }
+    if(letter === prefix && prefix !== q.correctAnswer){
+        btn.classList.add('bg-red-100','border-red-500');
+    }
 
-    });
+});
 
-};
         window.prevQuestion = function() { if (activeQuizIndex > 0) { activeQuizIndex--; showQuestion(); } };
         window.nextQuestion = function() {
             if (activeQuizIndex < currentQuizData.length - 1) { activeQuizIndex++; showQuestion(); }
