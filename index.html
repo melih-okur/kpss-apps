@@ -841,7 +841,7 @@ if (!jsonMatch) {
 }
 
 const parsed = JSON.parse(jsonMatch[0]);
-
+                console.log("AI QUESTIONS:", parsed);
                 currentQuizData   = parsed.questions || [];
                 activeQuizAnswers = Array(currentQuizData.length).fill(null);
                 activeQuizIndex   = 0;
