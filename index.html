@@ -768,82 +768,95 @@
         // ─── Anthropic Claude API Entegrasyonu ─────────────────────────────────────
         async function generateAiQuestions() {
             const promptText = `
-Sen Türkiye'nin en iyi KPSS soru hazırlama uzmanlarından birisin.
-
-Aşağıdaki çalışma planına %100 sadık kal.
-
-SADECE verilen konularla ilgili soru üret ve test toplamı 30 soru olsun 15 soru birinci ders 15 soru ikinci ders her sınav kesinlikle 30 soru olsun 
-
-Verilen konuların dışına çıkma.
-
-Sorular KPSS Lisans seviyesinde olsun.
-
-Çeldiriciler güçlü olsun.
-
-Kolay soru üretme.
-
-Her soru için geçen süreyi hesapla ve sınav sonunda toplam süreyi yaz
-
-ÖSYMNİN DAHA ÖNCEKİ YILLARDA ÇIKMIŞ SORULARINA BENZER ÜRET
-
-ÖSYMNİN DAHA ÖNCEKİ YILLARDA ÇIKMIŞ SORULARINI DİREKT OLARAK YAZ
-
-Sorular yorum ve analiz gerektirsin.
+Sen KPSS Lisans alanında uzman bir ölçme-değerlendirme uzmanı ve soru yazarı olarak görev yapıyorsun.
 
 Bugün çalışılan konular:
 
 ${activeDayForQuiz.tasks.join('\n')}
 
-Soruların tamamı yukarıdaki konularla ilgili olmak zorundadır.
+KURALLAR:
 
-Listede olmayan hiçbir konudan soru üretme.
+Sorular SADECE yukarıdaki konulardan üretilecek.
+Yukarıdaki konular dışında TEK BİR soru bile üretmeyeceksin.
+Toplam 20 soru üret.
+Sorular gerçek KPSS Lisans seviyesinde olacak.
+Sorular yorum, analiz ve bilgi sentezi gerektirecek.
+Çok basit tanım soruları üretmeyeceksin.
+Aynı soru tipini tekrar etmeyeceksin.
+Çeldiriciler güçlü olacak.
+Sorular ÖSYM mantığına uygun olacak.
+Her soruda yalnızca 1 doğru cevap olacak.
 
-Her test sonucu kullanıcıyı puanla ve eksik olan noklarını yorumla
+ZORLUK DAĞILIMI:
 
-Her sorunun "topic" alanı yukarıdaki konulardan biri olmalıdır.
+4 Kolay
+10 Orta
+6 Zor
 
-Her soru için aşağıdaki alanlar zorunludur:
+TARİH SORULARI:
 
-- subject
-- topic
-- difficulty
-- questionText
-- options
-- correctAnswer
-- explanation
+Sebep-sonuç ilişkisi kurdur.
+Kurum ve olay bağlantısı sorgulat.
+Sadece ezber bilgi sorma.
+
+COĞRAFYA SORULARI:
+
+Neden-sonuç ilişkisi kullandır.
+Harita ve yorum bilgisi ölç.
+Ezber bilgiye dayalı soru sorma.
+
+MATEMATİK SORULARI:
+
+İşlem gerektirsin.
+Mantık yürütme gerektirsin.
+KPSS problem mantığında olsun.
+
+TÜRKÇE SORULARI:
+
+Anlam bilgisi ve yorum becerisi ölçsün.
+Gereksiz uzun paragraf kullanma.
+
+AÇIKLAMA KURALI:
+
+explanation alanı öğretici olacak.
+
+Kötü örnek:
+"Doğru cevap B"
+
+İyi örnek:
+"Karahanlılar Türkçeyi resmi dil olarak kullanan ilk Türk-İslam devletidir. Bu nedenle doğru cevap B seçeneğidir."
+
+JSON ŞEMASI:
+
+{
+"questions":[
+{
+"subject":"Tarih",
+"topic":"İlk Türk-İslam Devletleri",
+"difficulty":"Orta",
+"questionText":"...",
+"options":[
+"Seçenek 1",
+"Seçenek 2",
+"Seçenek 3",
+"Seçenek 4",
+"Seçenek 5"
+],
+"correctAnswer":"A",
+"explanation":"..."
+}
+]
+}
 
 difficulty sadece:
 
+"Kolay"
 "Orta"
 "Zor"
 
-olarak dönsün.
+olsun.
 
-SADECE JSON dön.
-
-Başka hiçbir açıklama yazma.
-
-JSON formatı aşağıdaki gibi olmalıdır:
-
-{
-  "questions":[
-    {
-      "subject":"Türkçe",
-      "topic":"Sözcükte Anlam",
-      "difficulty":"Orta",
-      "questionText":"Soru metni",
-      "options":[
-        "A) Seçenek",
-        "B) Seçenek",
-        "C) Seçenek",
-        "D) Seçenek",
-        "E) Seçenek"
-      ],
-      "correctAnswer":"A",
-      "explanation":"Açıklama"
-    }
-  ]
-}
+JSON dışında hiçbir şey yazma.
 `;
 
             try {
