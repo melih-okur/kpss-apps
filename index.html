@@ -767,42 +767,27 @@
 
         // ─── Anthropic Claude API Entegrasyonu ─────────────────────────────────────
         async function generateAiQuestions() {
-            const promptText = `
-Sen Türkiye'nin en iyi KPSS soru hazırlama uzmanlarından birisin.
+            const currentTopics = activeDayForQuiz.tasks.join("\n");
 
-Aşağıdaki çalışma planına %100 sadık kal.
+const promptText = `
+Sen deneyimli bir KPSS öğretmenisin.
 
-SADECE verilen konularla ilgili soru üret ve test toplamı 30 soru olsun 15 soru birinci ders 15 soru ikinci ders her sınav kesinlikle 30 soru olsun 
+Bugün öğrencinin çalıştığı konular şunlardır:
 
-Verilen konuların dışına çıkma.
+${currentTopics}
 
-Sorular KPSS Lisans seviyesinde olsun.
+SADECE yukarıdaki konulardan soru üret.
 
-Çeldiriciler güçlü olsun.
+Türkçe paragraf,
+genel kültür,
+rastgele bilgi,
+başka ders soruları üretme.
 
-Kolay soru üretme.
+Sorular yalnızca bugün çalışılan konularla ilgili olsun.
 
-Her soru için geçen süreyi hesapla ve sınav sonunda toplam süreyi yaz
+15 adet KPSS tarzı çoktan seçmeli soru hazırla.
 
-ÖSYMNİN DAHA ÖNCEKİ YILLARDA ÇIKMIŞ SORULARINA BENZER ÜRET
-
-ÖSYMNİN DAHA ÖNCEKİ YILLARDA ÇIKMIŞ SORULARINI DİREKT OLARAK YAZ
-
-Sorular yorum ve analiz gerektirsin.
-
-Bugün çalışılan konular:
-
-${activeDayForQuiz.tasks.join('\n')}
-
-Soruların tamamı yukarıdaki konularla ilgili olmak zorundadır.
-
-Listede olmayan hiçbir konudan soru üretme.
-
-Her test sonucu kullanıcıyı puanla ve eksik olan noklarını yorumla
-
-Her sorunun "topic" alanı yukarıdaki konulardan biri olmalıdır.
-
-Her soru için aşağıdaki alanlar zorunludur:
+Her soru için şu alanları döndür:
 
 - subject
 - topic
@@ -814,33 +799,38 @@ Her soru için aşağıdaki alanlar zorunludur:
 
 difficulty sadece:
 
+"Kolay"
 "Orta"
 "Zor"
 
-olarak dönsün.
+değerlerinden biri olsun.
+
+options dizisinde sadece şunlar bulunsun:
+
+[
+"A seçeneği",
+"B seçeneği",
+"C seçeneği",
+"D seçeneği",
+"E seçeneği"
+]
+
+A), B), C) yazma.
 
 SADECE JSON dön.
 
-Başka hiçbir açıklama yazma.
-
-JSON formatı aşağıdaki gibi olmalıdır:
+Örnek:
 
 {
   "questions":[
     {
-      "subject":"Türkçe",
-      "topic":"Sözcükte Anlam",
+      "subject":"Tarih",
+      "topic":"İlk Türk İslam Devletleri",
       "difficulty":"Orta",
-      "questionText":"Soru metni",
-      "options":[
-        "A) Seçenek",
-        "B) Seçenek",
-        "C) Seçenek",
-        "D) Seçenek",
-        "E) Seçenek"
-      ],
-      "correctAnswer":"A",
-      "explanation":"Açıklama"
+      "questionText":"...",
+      "options":["...","...","...","...","..."],
+      "correctAnswer":"B",
+      "explanation":"..."
     }
   ]
 }
