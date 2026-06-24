@@ -1600,7 +1600,7 @@
 
         // ─── Groq API Entegrasyonu ────────────────────────────────────────────────
         // ─── Groq AI Akıllı Kuyruk Sistemi ────────────────────────────────────────
-        const SMART_QUEUE_CONFIG = { packageSize: 5, waitTime: 18000, maxRetries: 3, model: "llama-3.3-70b-specdec" };
+        const SMART_QUEUE_CONFIG = { packageSize: 5, waitTime: 18000, maxRetries: 3, model: "llama-3.3-70b-versatile" };
         const sleep = ms => new Promise(res => setTimeout(res, ms));
         function getGroqKey() {
             const savedKey = localStorage.getItem('kpss_groq_key');
@@ -1626,9 +1626,12 @@
                     headers: { "Content-Type": "application/json", "Authorization": `Bearer ${groqKey}` },
                     body: JSON.stringify({
                         model: SMART_QUEUE_CONFIG.model,
-                        messages: [{ role: "user", content: prompt }],
+                        messages: [
+                            { role: "system", content: "Sen bir KPSS uzmanısın ve sadece JSON formatında yanıt verirsin." },
+                            { role: "user", content: prompt }
+                        ],
                         temperature: 0.7,
-                        max_tokens: 2500,
+                        max_tokens: 3000,
                         response_format: { type: "json_object" }
                     })
                 });
