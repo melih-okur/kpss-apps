@@ -9,11 +9,11 @@ export default async function handler(req, res) {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          'HTTP-Referer': 'https://your-vercel-app-url.vercel.app', // Vercel uygulamanızın URL'si ile değiştirin
+          'HTTP-Referer': 'https://kpss-apps.vercel.app/', 
           'X-Title': 'KPSS Soru Üretici Backend'
         },
         body: JSON.stringify({
-          model: 'deepseek/deepseek-chat', // DeepSeek'in en güncel ve kaliteli modeli
+          model: 'deepseek/deepseek-chat',
           messages: [
             {
               role: 'user',
@@ -23,14 +23,13 @@ export default async function handler(req, res) {
           temperature: 0.7,
           max_tokens: 4000,
           top_p: 0.95
-        })
+        } )
       }
     );
 
     const data = await response.json();
 
     if (!response.ok) {
-      // OpenRouter'dan gelen hata mesajını daha detaylı ilet
       const errorDetail = data.error ? data.error.message : 'Bilinmeyen OpenRouter API hatası';
       return res.status(response.status).json({ error: `OpenRouter API Hatası: ${errorDetail}` });
     }
