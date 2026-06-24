@@ -1495,45 +1495,63 @@
         async function generateAiQuestions() {
             const groqKey = localStorage.getItem('kpss_groq_key') || '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';
 
-            const promptText = `Sen Türkiye'nin en iyi KPSS soru hazırlama uzmanlarından birisin.
+            // O günün görevlerinden hangi derslerin geçtiğini tespit et
+            const taskText = activeDayForQuiz.tasks.join('\n');
+            const subjects = [];
+            if (/türkçe|paragraf|sözel|noktalama|anlam|anlatım|dil bilgisi/i.test(taskText)) subjects.push('Türkçe');
+            if (/matematik|problem|geometri|sayısal|kesir|oran|denklem/i.test(taskText)) subjects.push('Matematik');
+            if (/tarih|osmanlı|inkılap|çağdaş|selçuklu|cumhuriyet|kurtuluş/i.test(taskText)) subjects.push('Tarih');
+            if (/coğrafya|iklim|nüfus|harita|dağ|göl|toprak|beşeri/i.test(taskText)) subjects.push('Coğrafya');
+            if (/vatandaşlık|anayasa|yasama|yürütme|yargı|idare|hukuk/i.test(taskText)) subjects.push('Vatandaşlık');
+            if (subjects.length === 0) subjects.push('Türkçe', 'Matematik');
 
-Aşağıdaki çalışma planına %100 sadık kal.
+            const subjectList = subjects.join(', ');
+            const totalQ = subjects.length * 6;
 
-SADECE verilen konularla ilgili soru üret. Test toplamı 30 soru olsun: 15 soru birinci ders, 15 soru ikinci ders.
+            const promptText = `Sen Türkiye'nin en elit KPSS soru yazarısın. Görevin gerçek ÖSYM sınavlarında çıkmış sorularla birebir kalite ve format eşleşmesi sağlamak.
 
-Sorular KPSS Lisans seviyesinde olsun. Çeldiriciler güçlü olsun. Kolay soru üretme.
+BUGÜNÜN ÇALIŞMA KONULARI:
+${taskText}
 
-ÖSYM'nin daha önceki yıllarda çıkmış sorularına benzer üret.
+GÖREV: Yukarıdaki konulardan SADECE şu dersler için her birinden 6'şar soru üret: ${subjectList}
+Toplam soru sayısı: ${totalQ}
 
-Sorular yorum ve analiz gerektirsin.
+ZORUNLU KALİTE KURALLARI — HİÇBİRİNDEN TAVIZ VERME:
 
-Bugün çalışılan konular:
-${activeDayForQuiz.tasks.join('\n')}
+1. ZORLUK: Tüm sorular "Zor" seviyede olacak. ÖSYM'nin gerçek sınavında eleme yapan soru tipi. Kolay, orta veya ezber gerektiren soru YASAK.
 
-Soruların tamamı yukarıdaki konularla ilgili olmak zorundadır.
+2. SORU TİPLERİ (her derste çeşitlendir):
+   - Türkçe: Anlam kayması/çok anlamlılık, paragrafta ana düşünce, yazarın tutumu/tonu, boş bırakılan yere gelecek cümle, anlatım bozukluğu nedeni
+   - Matematik: Çok adımlı problem, oran-orantı + yüzde bileşik, sayı teorisi, şekil/alan problemleri, mantık-dizi soruları
+   - Tarih: Neden-sonuç ilişkisi kurma, iki olay arasında karşılaştırma, dönemin siyasi atmosferini yorumlama, kaynak analizi
+   - Coğrafya: Harita yorumlama, iklim-bitki örtüsü ilişkilendirme, nüfus-ekonomi bağlantısı, beşeri faktör analizi
+   - Vatandaşlık: Anayasa maddesi yorumlama, iki hak/özgürlük karşılaştırması, idare hukuku senaryo sorusu, içtihat analizi
 
-Her soru için aşağıdaki alanlar zorunludur:
-- subject (Türkçe/Matematik/Tarih/Coğrafya/Vatandaşlık)
-- topic
-- difficulty ("Orta" veya "Zor")
-- questionText
-- options (A'dan E'ye 5 seçenek, "A) ..." formatında)
-- correctAnswer (sadece harf: "A", "B", "C", "D" veya "E")
-- explanation
+3. SORU METNİ YAZIM KURALLARI — ÇOK ÖNEMLİ:
+   - Eğer soruda "Aşağıdakilerden hangisi...", "I, II, III" veya madde listesi varsa her maddeyi AYRI SATIRA yaz
+   - Maddeleri "\\n" ile değil gerçek satır sonu karakteriyle ayır. Şu formatı kullan:
+     "I. Ankara, 1919'da kongre ev sahipliği yaptı.\\nII. Sivas Kongresi ulusal nitelik taşır.\\nIII. Erzurum Kongresi doğu illerini temsil eder."
+   - Seçeneklerde de liste/madde varsa aynı şekilde satır başı yap
 
-SADECE JSON döndür. Başka hiçbir açıklama yazma.
+4. ÇELDİRİCİ KURALLARI:
+   - Her yanlış şık makul ve cazip olmalı — "açıkça saçma" seçenek yasak
+   - En az 2 şık birbiriyle çok yakın/benzer ama ince farkla yanlış olmalı
+   - Doğru cevap açıkça belli olmamalı, düşünmeyi gerektirmeli
 
-JSON formatı:
+5. AÇIKLAMA: Her sorunun açıklaması şunu içersin: neden doğru cevap doğru, neden diğerleri yanlış (kısaca). Max 3 cümle.
+
+SADECE geçerli JSON döndür. Markdown, açıklama, kod bloğu YASAK.
+
 {
-  "questions":[
+  "questions": [
     {
-      "subject":"Türkçe",
-      "topic":"Sözcükte Anlam",
-      "difficulty":"Orta",
-      "questionText":"Soru metni",
-      "options":["A) Seçenek","B) Seçenek","C) Seçenek","D) Seçenek","E) Seçenek"],
-      "correctAnswer":"A",
-      "explanation":"Açıklama"
+      "subject": "Türkçe",
+      "topic": "Paragrafta Ana Düşünce",
+      "difficulty": "Zor",
+      "questionText": "Aşağıdaki paragrafı okuyunuz:\\n\\n'...'\\n\\nBu parçada yazar esas olarak neyi vurgulamaktadır?",
+      "options": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."],
+      "correctAnswer": "C",
+      "explanation": "Açıklama metni."
     }
   ]
 }`;
