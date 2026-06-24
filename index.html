@@ -1603,49 +1603,46 @@
 
         // ─── OpenRouter API Entegrasyonu (DeepSeek) ────────────────────────────────
         async function generateAiQuestions() {
-            // OpenRouter API anahtarı (sk- ile başlayan)
-            const openrouterKey = localStorage.getItem('openrouter_api_key') || "sk-or-v1-YOUR_OPENROUTER_API_KEY_HERE";
+            const openrouterKey = localStorage.getItem('openrouter_api_key') || "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";
+            
+            // Dersleri ve konuları analiz et
+            const tasks = activeDayForQuiz.tasks.filter(t => !t.toLowerCase().includes('rutin') && !t.toLowerCase().includes('kontrol'));
+            const dersSayisi = tasks.length;
+            const soruSayisiPerDers = 10;
+            const toplamSoru = dersSayisi * soruSayisiPerDers;
 
-            const promptText = `Sen KPSS sınav sorularının en usta yazarısın. ÖSYM'nin metodolojisini mükemmel şekilde takip edersin.
+            const promptText = `Sen ÖSYM Soru Hazırlama Komisyonu'nda görevli, KPSS Lisans alanında uzman bir profesörsün. 
+Görevin, bugün çalışılan her bir konu başlığı için tam olarak ${soruSayisiPerDers} adet, toplamda ${toplamSoru} adet soru üretmektir.
 
-🎯 KRİTİK KURALLAR:
-1. SADECE bu konulardan soru yaz: ${activeDayForQuiz.tasks.join(', ')}
-2. Her soru YORUM, ANALİZ ve KAVRAM UYGULAMASI gerektirsin. Ezber sorular yazma.
-3. Sorularını şu formatlarda yaz:
-   - Öncüllü (I, II, III): "Aşağıdakilerden hangileri doğrudur?" veya "Hangileri bu durumun sonucu olabilir?"
-   - Yargı-Yorum: "Bu gelişmenin temel sebebi nedir?" veya "Bu politikanın amacı aşağıdakilerden hangisidir?"
-   - Kavram Analizi: "X kavramının Y dönemindeki anlamı nedir?" (tarihsel bağlamda)
-4. Çeldiriciler GÜÇLÜ olsun. Doğru cevaba çok benzeyen ama kronolojik/mantıksal hata içeren şıklar ekle.
-5. Akademik ve resmi dil kullan. "Padişah şunu yaptı" yerine "Osmanlı devlet idaresinde merkeziyetçi yapıyı güçlendirmek amacıyla..."
-6. Sorular KPSS Lisans seviyesinde, ÖSYM tarzında, analitik düşünme gerektirsin.
+📚 MÜFREDAT VE KAPSAM:
+${tasks.map((t, i) => `${i+1}. KONU: ${t}`).join('\n')}
 
-📚 Bugün çalışılan konular (SADECE bunlardan soru yap):
-${activeDayForQuiz.tasks.join(', ')}
+🎯 ÖSYM STANDARTLARI (KRİTİK):
+1. SORU KALİTESİ: Sorular asla ezber bilgi sormamalıdır. Adayın bilgiyi analiz etmesini, yorumlamasını ve öncüller arasında mantıksal bağ kurmasını gerektirmelidir.
+2. DİL VE ÜSLUP: Tamamen akademik, resmi ve ciddi bir dil kullanılmalıdır. (Örn: "Hangisi yanlıştır?" yerine "Hangisinin bu durumun bir sonucu olduğu savunulamaz?")
+3. ÇELDİRİCİLER: Seçenekler birbirine çok yakın olmalı, adayda "iki şık arasında kalma" hissi uyandırmalıdır. Çeldiriciler kronolojik veya mantıksal olarak çok güçlü kurgulanmalıdır.
+4. FORMAT ÇEŞİTLİLİĞİ: 
+   - Öncüllü Sorular (I, II, III yapısında)
+   - Yargı-Sonuç Analizleri
+   - Tarihsel/Kavramsal Bağlam Soruları
+5. KESİN KURAL: Her bir ana konu başlığından istisnasız ${soruSayisiPerDers} soru üretilecektir.
 
-Soruların tamamı yukarıdaki konularla ilgili olmak zorundadır.
+⚠️ JSON GÜVENLİĞİ VE FORMAT:
+- Sadece geçerli bir JSON objesi döndür.
+- Metinler içinde çift tırnak (") kullanman gerekirse mutlaka ters eğik çizgi (\\") ile kaçış yap.
+- Yanıtın başına veya sonuna asla açıklama yazma.
 
-Her soru için aşağıdaki alanlar zorunludur:
-- subject (Türkçe/Matematik/Tarih/Coğrafya/Vatandaşlık)
-- topic
-- difficulty ("Orta" veya "Zor")
-- questionText
-- options (A'dan E'ye 5 seçenek, "A) ..." formatında)
-- correctAnswer (sadece harf: "A", "B", "C", "D" veya "E")
-- explanation
-
-SADECE JSON döndür. Başka hiçbir açıklama yazma.
-
-JSON formatı:
+JSON YAPISI:
 {
-  "questions":[
+  "questions": [
     {
-      "subject":"Türkçe",
-      "topic":"Sözcükte Anlam",
-      "difficulty":"Orta",
-      "questionText":"Soru metni",
-      "options":["A) Seçenek","B) Seçenek","C) Seçenek","D) Seçenek","E) Seçenek"],
-      "correctAnswer":"A",
-      "explanation":"Açıklama"
+      "subject": "Ders Adı",
+      "topic": "Konu Adı",
+      "difficulty": "Zor",
+      "questionText": "Soru metni (ÖSYM diliyle)",
+      "options": ["A) Seçenek","B) Seçenek","C) Seçenek","D) Seçenek","E) Seçenek"],
+      "correctAnswer": "A",
+      "explanation": "Detaylı, akademik ve öğretici çözüm açıklaması."
     }
   ]
 }`;
@@ -1680,20 +1677,30 @@ JSON formatı:
                 }
 
                 const result = await response.json();
-                const rawText = result.choices?.[0]?.message?.content || "";
+                let rawText = result.choices?.[0]?.message?.content || "";
                 
                 if (!rawText) {
                     throw new Error("AI boş yanıt döndürdü");
                 }
 
-                // JSON'u çıkar
+                // JSON'u temizle ve çıkar
+                // Bazı modeller JSON'u markdown kod blokları içine alabiliyor
+                rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+                
                 const jsonMatch = rawText.match(/\{[\s\S]*\}/);
                 if (!jsonMatch) {
                     console.error("AI Yanıtı:", rawText);
                     throw new Error("Geçerli JSON formatı bulunamadı");
                 }
 
-                const parsed = JSON.parse(jsonMatch[0]);
+                let parsed;
+                try {
+                    parsed = JSON.parse(jsonMatch[0]);
+                } catch (parseErr) {
+                    // Eğer parse hatası varsa, yaygın hataları düzeltmeye çalış (örn: sondaki virgül)
+                    const fixedJson = jsonMatch[0].replace(/,\s*([\]}])/g, '$1');
+                    parsed = JSON.parse(fixedJson);
+                }
                 currentQuizData = parsed.questions || [];
                 
                 if (!Array.isArray(currentQuizData) || currentQuizData.length === 0) {
