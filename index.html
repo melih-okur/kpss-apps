@@ -563,6 +563,73 @@
             </div>
         </div><!-- /screen-wrong -->
 
+        <!-- ÖZEL TEST LABORATUVARI -->
+        <div id="screen-custom" class="screen">
+            <div class="mb-6">
+                <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">🔬 Özel Test Laboratuvarı</h2>
+                <p class="text-xs text-slate-400 mt-1">Kendi testini oluştur ve ÖSYM tarzında sorularla çalış</p>
+            </div>
+
+            <!-- Test Oluşturma Formu -->
+            <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm mb-6 space-y-5">
+                
+                <!-- Ders Seçimi -->
+                <div>
+                    <label class="block text-xs font-black text-slate-900 dark:text-slate-200 uppercase tracking-wider mb-3">📚 Ders Seçin</label>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="selectCustomSubject('Türkçe')" class="custom-subject-btn px-4 py-2 rounded-full text-sm font-bold border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition" data-subject="Türkçe">Türkçe</button>
+                        <button onclick="selectCustomSubject('Matematik')" class="custom-subject-btn px-4 py-2 rounded-full text-sm font-bold border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition" data-subject="Matematik">Matematik</button>
+                        <button onclick="selectCustomSubject('Tarih')" class="custom-subject-btn px-4 py-2 rounded-full text-sm font-bold border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition" data-subject="Tarih">Tarih</button>
+                        <button onclick="selectCustomSubject('Coğrafya')" class="custom-subject-btn px-4 py-2 rounded-full text-sm font-bold border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition" data-subject="Coğrafya">Coğrafya</button>
+                        <button onclick="selectCustomSubject('Vatandaşlık')" class="custom-subject-btn px-4 py-2 rounded-full text-sm font-bold border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition" data-subject="Vatandaşlık">Vatandaşlık</button>
+                    </div>
+                </div>
+
+                <!-- Konu Filtresi -->
+                <div>
+                    <label class="block text-xs font-black text-slate-900 dark:text-slate-200 uppercase tracking-wider mb-2">🎯 Konular (Opsiyonel)</label>
+                    <input type="text" id="custom-topics-input" placeholder="Virgülle ayırarak konuları yazın. Örn: İslamiyet Öncesi, Osmanlı Devleti" class="w-full px-4 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 text-sm placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+
+                <!-- Zorluk Seçimi -->
+                <div>
+                    <label class="block text-xs font-black text-slate-900 dark:text-slate-200 uppercase tracking-wider mb-3">Zorluk Seviyesi</label>
+                    <div class="flex gap-2">
+                        <button onclick="selectCustomDifficulty('Kolay')" class="custom-difficulty-btn px-4 py-2 rounded-full text-sm font-bold border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition" data-difficulty="Kolay">Kolay</button>
+                        <button onclick="selectCustomDifficulty('Orta')" class="custom-difficulty-btn px-4 py-2 rounded-full text-sm font-bold border-2 border-indigo-500 bg-indigo-50 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-400 transition" data-difficulty="Orta">Orta (Varsayılan)</button>
+                        <button onclick="selectCustomDifficulty('Zor')" class="custom-difficulty-btn px-4 py-2 rounded-full text-sm font-bold border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 transition" data-difficulty="Zor">Zor</button>
+                    </div>
+                </div>
+
+                <!-- Soru Sayısı -->
+                <div>
+                    <label class="block text-xs font-black text-slate-900 dark:text-slate-200 uppercase tracking-wider mb-3">Soru Sayısı</label>
+                    <div class="flex items-center gap-3">
+                        <input type="range" id="custom-question-count" min="5" max="20" value="15" class="flex-1 h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-indigo-600">
+                        <span id="custom-question-display" class="text-sm font-bold text-indigo-600 dark:text-indigo-400 min-w-[40px] text-right">15 Soru</span>
+                    </div>
+                </div>
+
+                <!-- Başlat Butonu -->
+                <button onclick="generateCustomQuiz()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-bold py-3.5 rounded-2xl transition-all duration-200 transform hover:scale-105 active:scale-95 shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2">
+                    <span>🚀</span>
+                    <span>Sınavı Başlat</span>
+                </button>
+            </div>
+
+            <!-- Bilgi Kartı -->
+            <div class="bg-indigo-50 dark:bg-indigo-950/30 rounded-3xl p-5 border border-indigo-200 dark:border-indigo-800/40 space-y-3">
+                <p class="text-xs font-bold text-indigo-900 dark:text-indigo-400 flex items-start gap-2">
+                    <span class="text-base mt-0.5">💡</span>
+                    <span>Konu filtresini boş bırakırsan, seçtiğin dersin tüm konularından sorular gelecek.</span>
+                </p>
+                <p class="text-xs font-bold text-indigo-900 dark:text-indigo-400 flex items-start gap-2">
+                    <span class="text-base mt-0.5">🌟</span>
+                    <span>Tüm sorular ÖSYM tarzında, yorum ve analiz becerilerine odaklıdır.</span>
+                </p>
+            </div>
+        </div><!-- /screen-custom -->
+
     </main>
 
     <!-- Alt Navigasyon -->
@@ -579,6 +646,10 @@
             <button class="nav-btn" id="nav-wrong" onclick="switchScreen('wrong')">
                 <span class="nav-icon">📓</span>
                 <span class="nav-label">Yanlış Defter</span>
+            </button>
+            <button class="nav-btn" id="nav-custom" onclick="switchScreen('custom')">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-label">Özel Test</span>
             </button>
         </div>
     </nav>
@@ -1519,20 +1590,21 @@
             // Kullanicinin sagladigi guncel API anahtari
             const groqKey = "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";
 
-            const promptText = `Sen Türkiye'nin en iyi KPSS soru hazırlama uzmanlarından birisin.
+            const promptText = `Sen KPSS sınav sorularının en usta yazarısın. ÖSYM'nin metodolojisini mükemmel şekilde takip edersin.
 
-Aşağıdaki çalışma planına %100 sadık kal.
+🎯 KRİTİK KURALLAR:
+1. SADECE bu konulardan soru yaz: ${activeDayForQuiz.tasks.join(', ')}
+2. Her soru YORUM, ANALİZ ve KAVRAM UYGULAMASI gerektirsin. Ezber sorular yazma.
+3. Sorularını şu formatlarda yaz:
+   - Öncüllü (I, II, III): "Aşağıdakilerden hangileri doğrudur?" veya "Hangileri bu durumun sonucu olabilir?"
+   - Yargı-Yorum: "Bu gelişmenin temel sebebi nedir?" veya "Bu politikanın amacı aşağıdakilerden hangisidir?"
+   - Kavram Analizi: "X kavramının Y dönemindeki anlamı nedir?" (tarihsel bağlamda)
+4. Çeldiriciler GÜÇLÜ olsun. Doğru cevaba çok benzeyen ama kronolojik/mantıksal hata içeren şıklar ekle.
+5. Akademik ve resmi dil kullan. "Padişah şunu yaptı" yerine "Osmanlı devlet idaresinde merkeziyetçi yapıyı güçlendirmek amacıyla..."
+6. Sorular KPSS Lisans seviyesinde, ÖSYM tarzında, analitik düşünme gerektirsin.
 
-SADECE verilen konularla ilgili soru üret. Test toplamı 15 soru olsun.
-
-Sorular KPSS Lisans seviyesinde olsun. Çeldiriciler güçlü olsun. Kolay soru üretme.
-
-ÖSYM'nin daha önceki yıllarda çıkmış sorularına benzer üret.
-
-Sorular yorum ve analiz gerektirsin.
-
-Bugün çalışılan konular:
-${activeDayForQuiz.tasks.join('\n')}
+📚 Bugün çalışılan konular (SADECE bunlardan soru yap):
+${activeDayForQuiz.tasks.join(', ')}
 
 Soruların tamamı yukarıdaki konularla ilgili olmak zorundadır.
 
@@ -1986,6 +2058,137 @@ JSON formatı:
         }
 
         // ─── PWA Kararlı Başlatma ─────────────────────────────────────────────────
+        // --- Ozel Test Laboratuvari Fonksiyonlari ---
+        let customTestConfig = { subject: 'Tarih', difficulty: 'Orta', questionCount: 15, topics: '' };
+        
+        window.selectCustomSubject = function(subject) {
+            customTestConfig.subject = subject;
+            document.querySelectorAll('.custom-subject-btn').forEach(b => {
+                b.classList.remove('border-indigo-500', 'bg-indigo-50', 'dark:bg-indigo-950/30', 'text-indigo-700', 'dark:text-indigo-400');
+                b.classList.add('border-slate-200', 'dark:border-slate-700', 'bg-white', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+                if (b.getAttribute('data-subject') === subject) {
+                    b.classList.remove('border-slate-200', 'dark:border-slate-700', 'bg-white', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+                    b.classList.add('border-indigo-500', 'bg-indigo-50', 'dark:bg-indigo-950/30', 'text-indigo-700', 'dark:text-indigo-400');
+                }
+            });
+        };
+        
+        window.selectCustomDifficulty = function(difficulty) {
+            customTestConfig.difficulty = difficulty;
+            document.querySelectorAll('.custom-difficulty-btn').forEach(b => {
+                b.classList.remove('border-indigo-500', 'bg-indigo-50', 'dark:bg-indigo-950/30', 'text-indigo-700', 'dark:text-indigo-400');
+                b.classList.add('border-slate-200', 'dark:border-slate-700', 'bg-white', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+                if (b.getAttribute('data-difficulty') === difficulty) {
+                    b.classList.remove('border-slate-200', 'dark:border-slate-700', 'bg-white', 'dark:bg-slate-800', 'text-slate-600', 'dark:text-slate-300');
+                    b.classList.add('border-indigo-500', 'bg-indigo-50', 'dark:bg-indigo-950/30', 'text-indigo-700', 'dark:text-indigo-400');
+                }
+            });
+        };
+        
+        window.generateCustomQuiz = async function() {
+            const groqKey = "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";
+            const topicsInput = document.getElementById('custom-topics-input').value.trim();
+            const topicsText = topicsInput ? `Konular: ${topicsInput}` : `Dersin tum konularindan`;
+            
+            const promptText = `Sen KPSS sinav sorularinin en usta yazarisi. OSYM'nin metodolojisini mukemmel sekilde takip edersin.
+
+KRITIK KURALLAR:
+1. ${customTestConfig.subject} dersinden ${topicsText} soru yaz.
+2. Zorluk seviyesi: ${customTestConfig.difficulty}
+3. Toplam ${customTestConfig.questionCount} soru uret.
+4. Her soru YORUM, ANALIZ ve KAVRAM UYGULAMASI gerektirsin. Ezber sorular yazma.
+5. Sorularini su formatlarda yaz:
+   - Onculu (I, II, III): "Asagidakilerden hangileri dogrудur?" veya "Hangileri bu durumun sonucu olabilir?"
+   - Yargi-Yorum: "Bu gelismenin temel sebebi nedir?" veya "Bu politikanin amaci asagidakilerden hangisidir?"
+   - Kavram Analizi: "X kavraminin Y donemindeki anlami nedir?" (tarihsel baglamda)
+6. Celdiriciler GUCLU olsun. Dogru cevaba cok benzeyen ama kronolojik/mantiksal hata iceren siklar ekle.
+7. Akademik ve resmi dil kullan.
+8. Sorular KPSS Lisans seviyesinde, OSYM tarzinda, analitik dusunme gerektirsin.
+
+Her soru icin asagidaki alanlar zorunludur:
+- subject (${customTestConfig.subject})
+- topic
+- difficulty ("${customTestConfig.difficulty}")
+- questionText
+- options (A'dan E'ye 5 secеnek, "A) ..." formatinda)
+- correctAnswer (sadece harf: "A", "B", "C", "D" veya "E")
+- explanation
+
+SADECE JSON dondur. Baska hic bir aciklama yazma.
+
+JSON formati:
+{
+  "questions":[
+    {
+      "subject":"${customTestConfig.subject}",
+      "topic":"Konu Adi",
+      "difficulty":"${customTestConfig.difficulty}",
+      "questionText":"Soru metni",
+      "options":["A) Secеnek","B) Secеnek","C) Secеnek","D) Secеnek","E) Secеnek"],
+      "correctAnswer":"A",
+      "explanation":"Aciklama"
+    }
+  ]
+}`;
+            
+            try {
+                showToast('Test hazirlaniyor...');
+                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${groqKey.trim()}`
+                    },
+                    body: JSON.stringify({
+                        model: "llama-3.1-8b-instant",
+                        messages: [{ role: "user", content: promptText }],
+                        temperature: 0.7,
+                        max_tokens: 4000,
+                        top_p: 0.95
+                    })
+                });
+
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({ error: { message: 'Bilinmeyen hata' } }));
+                    const errMsg = errData.error?.message || `HTTP ${response.status}`;
+                    throw new Error(`Groq API Hatasi: ${errMsg}`);
+                }
+
+                const result = await response.json();
+                const rawText = result.choices?.[0]?.message?.content || "";
+                const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+                if (!jsonMatch) throw new Error("Gecerli JSON formati bulunamadi");
+
+                const parsed = JSON.parse(jsonMatch[0]);
+                currentQuizData = parsed.questions || [];
+                currentQuizData = currentQuizData.filter(q => q.questionText && q.options && q.correctAnswer && q.subject);
+                
+                if (currentQuizData.length === 0) throw new Error("Gecerli soru bulunamadi");
+                
+                activeQuizAnswers = Array(currentQuizData.length).fill(null);
+                activeQuizIndex = 0;
+                quizMode = 'exam';
+                switchScreen('quiz');
+                showQuestion();
+                showToast(`${currentQuizData.length} sorulu test baslatildi!`);
+                
+            } catch (err) {
+                console.error("Test Olusturma Hatasi:", err);
+                showToast(`Hata: ${err.message}`);
+            }
+        };
+        
+        // Range input event listener
+        document.addEventListener('DOMContentLoaded', () => {
+            const rangeInput = document.getElementById('custom-question-count');
+            if (rangeInput) {
+                rangeInput.addEventListener('input', (e) => {
+                    customTestConfig.questionCount = parseInt(e.target.value);
+                    document.getElementById('custom-question-display').innerText = `${e.target.value} Soru`;
+                });
+            }
+        });
+
         window.addEventListener('load', () => {
             const savedTheme = localStorage.getItem('kpss_theme');
             if (savedTheme === 'dark') document.documentElement.classList.add('dark');
