@@ -770,7 +770,7 @@
             const promptText = `Sen deneyimli bir KPSS öğretmenisin. "${activeDayForQuiz.title}" konusunu kapsayan, ÖSYM standartlarında 15 adet çoktan seçmeli soru hazırla. Her soru için konu adı, soru metni, A/B/C/D/E şıkları, doğru cevap harfi ve açıklama ver. SADECE JSON formatında dön, başka hiçbir şey yazma: {"questions": [{"subject": "Ders", "questionText": "Soru...", "options": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "correctAnswer": "A", "explanation": "Açıklama..."}]}`;
 
             try {
-               const response = await fetch("/.netlify/functions/groq", {
+               const response = await fetch("/api/groq", {
     method: "POST",
     headers: {
         "Content-Type": "application/json"
