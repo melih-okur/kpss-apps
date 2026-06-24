@@ -767,8 +767,141 @@
 
         // ─── Anthropic Claude API Entegrasyonu ─────────────────────────────────────
         async function generateAiQuestions() {
-            const promptText = `Sen deneyimli bir KPSS öğretmenisin. "${activeDayForQuiz.title}" konusunu kapsayan, ÖSYM standartlarında 15 adet çoktan seçmeli soru hazırla. Her soru için konu adı, soru metni, A/B/C/D/E şıkları, doğru cevap harfi ve açıklama ver. SADECE JSON formatında dön, başka hiçbir şey yazma: {"questions": [{"subject": "Ders", "questionText": "Soru...", "options": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "correctAnswer": "A", "explanation": "Açıklama..."}]}`;
+            const promptText = `
+Sen 15+ yıllık deneyime sahip bir KPSS Lisans hazırlık uzmanı, soru yazarı ve ölçme-değerlendirme uzmanısın.
 
+Öğrencinin bugün çalıştığı konular:
+
+${currentTopics}
+
+GÖREVİN:
+
+Sadece ve sadece yukarıdaki konularla ilgili KPSS Lisans seviyesinde 15 adet çoktan seçmeli soru üretmek.
+
+KRİTİK KURALLAR:
+
+- Çalışılmayan hiçbir konudan soru sorma.
+- Türkçe paragraf sorusu üretme.
+- Genel kültür sorusu üretme.
+- Güncel bilgi sorusu üretme.
+- Rastgele bilgi sorusu üretme.
+- Yukarıdaki konular dışına çıkma.
+- Aynı soru tipini tekrar etme.
+- Aynı bilgiyi farklı şekilde tekrar sorma.
+- Boş, yüzeysel veya ilkokul seviyesinde soru yazma.
+
+SORU KALİTESİ:
+
+- Sorular gerçek KPSS Lisans seviyesinde olsun.
+- Sorular sadece ezber ölçmesin.
+- Kavram bilgisi ölçsün.
+- Yorum gücü ölçsün.
+- Sebep-sonuç ilişkisi ölçsün.
+- Karşılaştırma yaptırsın.
+- Çeldiriciler güçlü olsun.
+- Sorular gerçek deneme sınavı kalitesinde olsun.
+
+ZORLUK DAĞILIMI:
+
+- 3 Kolay
+- 7 Orta
+- 5 Zor
+
+soru üret.
+
+MATEMATİK KONULARINDA:
+
+- Gerçek işlem gerektiren sorular üret.
+- Mantık yürütme gerektiren sorular üret.
+- KPSS tarzı problem mantığı kullan.
+- Çok basit tanım soruları üretme.
+
+TARİH KONULARINDA:
+
+- Neden-sonuç ilişkisi kurdur.
+- Kurumlar, devlet yapısı ve kültür ilişkisini sorgulat.
+- Sadece "kimdir", "nerededir" tarzı ezber sorular sorma.
+
+COĞRAFYA KONULARINDA:
+
+- Harita bilgisi
+- Neden-sonuç
+- Coğrafi yorum
+
+becerilerini ölç.
+
+VATANDAŞLIK KONULARINDA:
+
+- Kavram bilgisi
+- Hukuki yorum
+- Anayasal mantık
+
+ölç.
+
+AÇIKLAMA KURALI:
+
+Her sorunun explanation alanı öğretici olsun.
+
+Kötü örnek:
+
+"Doğru cevap A'dır."
+
+İyi örnek:
+
+"Karahanlılar, Türkçeyi resmi dil olarak kullanan ilk Türk-İslam devletidir. Bu durum Türk kültürünün korunmasına katkı sağlamıştır. Bu nedenle doğru cevap A seçeneğidir."
+
+OPTIONS KURALI:
+
+options dizisinde sadece seçenek metinleri olsun.
+
+ÖRNEK:
+
+[
+  "Karahanlılar",
+  "Gazneliler",
+  "Tolunoğulları",
+  "Büyük Selçuklular",
+  "Harzemşahlar"
+]
+
+A), B), C), D), E) yazma.
+
+JSON ŞEMASI:
+
+{
+  "questions": [
+    {
+      "subject": "Tarih",
+      "topic": "İlk Türk-İslam Devletleri",
+      "difficulty": "Orta",
+      "questionText": "Soru metni",
+      "options": [
+        "Seçenek 1",
+        "Seçenek 2",
+        "Seçenek 3",
+        "Seçenek 4",
+        "Seçenek 5"
+      ],
+      "correctAnswer": "A",
+      "explanation": "Öğretici açıklama"
+    }
+  ]
+}
+
+difficulty yalnızca:
+
+"Kolay"
+"Orta"
+"Zor"
+
+değerlerinden biri olsun.
+
+Mutlaka 15 soru üret.
+
+Mutlaka geçerli JSON üret.
+
+JSON dışında tek bir karakter bile yazma.
+`;
             try {
                const response = await fetch("/api/groq", {
     method: "POST",
