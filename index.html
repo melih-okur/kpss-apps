@@ -1600,7 +1600,7 @@
 
         // ─── Groq API Entegrasyonu ────────────────────────────────────────────────
         // ─── Groq AI Akıllı Kuyruk Sistemi ────────────────────────────────────────
-        const SMART_QUEUE_CONFIG = { packageSize: 5, waitTime: 18000, maxRetries: 3, model: "llama-3.3-70b-versatile" };
+        const SMART_QUEUE_CONFIG = { packageSize: 5, waitTime: 18000, maxRetries: 3, model: "llama-3.1-8b-instant" };
         const sleep = ms => new Promise(res => setTimeout(res, ms));
         function getGroqKey() {
             const savedKey = localStorage.getItem('kpss_groq_key');
@@ -1627,12 +1627,10 @@
                     body: JSON.stringify({
                         model: SMART_QUEUE_CONFIG.model,
                         messages: [
-                            { role: "system", content: "Sen bir KPSS uzmanısın ve sadece JSON formatında yanıt verirsin." },
-                            { role: "user", content: prompt }
+                            { role: "user", content: prompt + "\n\nIMPORTANT: Return ONLY a JSON object. Do not include any other text." }
                         ],
                         temperature: 0.7,
-                        max_tokens: 3000,
-                        response_format: { type: "json_object" }
+                        max_tokens: 3500
                     })
                 });
                 if (response.status === 429 && retryCount < SMART_QUEUE_CONFIG.maxRetries) {
@@ -1641,7 +1639,10 @@
                 }
                 if (!response.ok) throw new Error(`API Hatası: ${response.status}`);
                 const result = await response.json();
-                const parsed = JSON.parse(result.choices?.[0]?.message?.content || "{}");
+                const rawText = result.choices?.[0]?.message?.content || "{}";
+                // JSON ayıklama (baştaki/sondaki metinleri temizle)
+                const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+                const parsed = JSON.parse(jsonMatch ? jsonMatch[0] : rawText);
                 return parsed.questions || [];
             } catch (err) {
                 if (retryCount < SMART_QUEUE_CONFIG.maxRetries) { await sleep(5000); return fetchQuestionsFromGroq(prompt, retryCount + 1); }
