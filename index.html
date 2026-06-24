@@ -1683,24 +1683,47 @@ JSON YAPISI:
                     throw new Error("AI boş yanıt döndürdü");
                 }
 
-                // JSON'u temizle ve çıkar
-                // Bazı modeller JSON'u markdown kod blokları içine alabiliyor
-                rawText = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
-                
-                const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-                if (!jsonMatch) {
-                    console.error("AI Yanıtı:", rawText);
-                    throw new Error("Geçerli JSON formatı bulunamadı");
+                // --- ZIRHLI JSON TEMİZLEME VE ONARMA SİSTEMİ ---
+                function cleanAndParseJSON(text) {
+                    // 1. Markdown bloklarını temizle
+                    let cleaned = text.replace(/```json/g, '').replace(/```/g, '').trim();
+                    
+                    // 2. Sadece JSON objesini bul
+                    const start = cleaned.indexOf('{');
+                    const end = cleaned.lastIndexOf('}');
+                    if (start === -1 || end === -1) throw new Error("JSON objesi bulunamadı");
+                    cleaned = cleaned.substring(start, end + 1);
+                    
+                    // 3. Tehlikeli kontrol karakterlerini temizle (satır sonları hariç)
+                    cleaned = cleaned.replace(/[\u0000-\u001F\u007F-\u009F]/g, (c) => {
+                        return (c === '\n' || c === '\r' || c === '\t') ? c : '';
+                    });
+
+                    try {
+                        return JSON.parse(cleaned);
+                    } catch (e) {
+                        console.warn("İlk parse denemesi başarısız, onarma yapılıyor...");
+                        
+                        // 4. Yaygın hataları onar
+                        let fixed = cleaned
+                            .replace(/,\s*([\]}])/g, '$1') // Sondaki fazla virgüller
+                            .replace(/([^\\])"/g, '$1\"') // Kaçışsız tırnaklar (basit deneme)
+                            .replace(/\\"/g, '"').replace(/"/g, '\\"').replace(/^\\"|\\"$|:\\"|\\",|\\"\]|\[\\"|{\\"/g, (m) => m.replace(/\\"/g, '"')); // Tırnakları normalize et
+
+                        try {
+                            return JSON.parse(fixed);
+                        } catch (e2) {
+                            // 5. Son çare: Satır satır onarma veya daha agresif temizlik
+                            console.error("Onarma başarısız, ham metin inceleniyor.");
+                            // Eğer hala hata varsa, JSON.parse'ın nerede takıldığını bulmaya çalışmak yerine
+                            // en azından düzgün tırnak yapısını korumaya çalışalım
+                            const ultraFixed = cleaned.replace(/\n/g, ' ').replace(/\r/g, ' ');
+                            return JSON.parse(ultraFixed);
+                        }
+                    }
                 }
 
-                let parsed;
-                try {
-                    parsed = JSON.parse(jsonMatch[0]);
-                } catch (parseErr) {
-                    // Eğer parse hatası varsa, yaygın hataları düzeltmeye çalış (örn: sondaki virgül)
-                    const fixedJson = jsonMatch[0].replace(/,\s*([\]}])/g, '$1');
-                    parsed = JSON.parse(fixedJson);
-                }
+                const parsed = cleanAndParseJSON(rawText);
                 currentQuizData = parsed.questions || [];
                 
                 if (!Array.isArray(currentQuizData) || currentQuizData.length === 0) {
