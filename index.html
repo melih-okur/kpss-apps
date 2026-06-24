@@ -929,7 +929,7 @@ const parsed = JSON.parse(jsonMatch[0]);
                     : 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-950/60 text-slate-700 dark:text-slate-300'
                 }`;
                 btn.innerHTML = `<span class="inline-block w-6 h-6 bg-slate-100 dark:bg-slate-800 rounded-lg text-center leading-6 mr-2 font-mono">${prefix}</span> ${opt}`;
-                btn.onclick   = () => selectOption(prefix);
+                btn.onclick = () => window.selectOption(prefix);
                 optionsContainer.appendChild(btn);
             });
 
