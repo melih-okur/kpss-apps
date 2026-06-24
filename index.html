@@ -896,7 +896,8 @@ const parsed = JSON.parse(jsonMatch[0]);
             document.getElementById('quiz-play').classList.remove('hidden');
 
             const q = currentQuizData[activeQuizIndex];
-            document.getElementById('quiz-subject').innerText      = q.subject || 'KPSS';
+            document.getElementById('quiz-subject').innerText =
+`${q.subject || 'KPSS'} • ${q.topic || ''}`;
             document.getElementById('quiz-counter').innerText      = `Soru ${activeQuizIndex + 1} / ${currentQuizData.length}`;
             document.getElementById('quiz-question-text').innerText = q.questionText;
 
