@@ -847,7 +847,7 @@ JSON formatı aşağıdaki gibi olmalıdır:
 `;
 
             try {
-               const response = await fetch("/.netlify/functions/groq", {
+               const response = await fetch("/api/groq", {
     method: "POST",
     headers: {
         "Content-Type": "application/json"
