@@ -950,9 +950,10 @@
         function initAppEngine() {
             const savedFirebaseConfig = localStorage.getItem('kpss_firebase_config_v3') || "";
             const savedRoomId         = localStorage.getItem('kpss_room_id') || "";
+            const savedOpenRouterKey  = localStorage.getItem('openrouter_api_key') || "";
             
             document.getElementById('input-room-id').value  = savedRoomId || "melih-buse-2026";
-            document.getElementById('input-groq-key').value = '';
+            document.getElementById('input-openrouter-key').value = savedOpenRouterKey;
 
             if (savedRoomId.trim() !== "") customAppId = savedRoomId.trim();
 
@@ -960,13 +961,13 @@
             if (savedFirebaseConfig.trim() !== "") {
                 try {
                     configObj = JSON.parse(savedFirebaseConfig);
-                    document.getElementById('input-firebase-config').value = JSON.stringify(configObj, null, 2);
                 } catch (e) {
-                    document.getElementById('input-firebase-config').value = JSON.stringify(defaultFirebaseConfig, null, 2);
+                    configObj = defaultFirebaseConfig;
                 }
-            } else {
-                document.getElementById('input-firebase-config').value = JSON.stringify(defaultFirebaseConfig, null, 2);
             }
+            
+            // Textarea'yı her zaman güncel konfigürasyonla doldur
+            document.getElementById('input-firebase-config').value = JSON.stringify(configObj, null, 2);
 
             try {
                 if (firebase.apps.length === 0) firebase.initializeApp(configObj);
@@ -1310,6 +1311,21 @@
         // ─── Settings Modal ───────────────────────────────────────────────────────
         window.openSettingsModal = function() {
             const modal = document.getElementById('settings-modal');
+            
+            // Modal açıldığında alanları güncel verilerle doldur
+            const savedFirebaseConfig = localStorage.getItem('kpss_firebase_config_v3') || "";
+            const savedRoomId         = localStorage.getItem('kpss_room_id') || "";
+            const savedOpenRouterKey  = localStorage.getItem('openrouter_api_key') || "";
+            
+            document.getElementById('input-room-id').value = savedRoomId || "melih-buse-2026";
+            document.getElementById('input-openrouter-key').value = savedOpenRouterKey;
+            
+            if (savedFirebaseConfig) {
+                document.getElementById('input-firebase-config').value = savedFirebaseConfig;
+            } else {
+                document.getElementById('input-firebase-config').value = JSON.stringify(defaultFirebaseConfig, null, 2);
+            }
+
             modal.classList.remove('opacity-0', 'pointer-events-none');
             modal.querySelector('div').classList.remove('scale-95');
         };
