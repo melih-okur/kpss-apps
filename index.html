@@ -923,7 +923,31 @@ const parsed = JSON.parse(jsonMatch[0]);
             document.getElementById('quiz-next-btn').innerText = activeQuizIndex === currentQuizData.length - 1 ? 'Sınavı Bitir' : 'Sonraki ▶';
         }
 
-        window.selectOption = function(prefix) { activeQuizAnswers[activeQuizIndex] = prefix; showQuestion(); };
+        window.selectOption = function(prefix) {
+
+    const q = currentQuizData[activeQuizIndex];
+
+    activeQuizAnswers[activeQuizIndex] = prefix;
+
+    const buttons = document.querySelectorAll('#quiz-options-container button');
+
+    buttons.forEach(btn => btn.disabled = true);
+
+    buttons.forEach(btn => {
+
+        const letter = btn.querySelector('span').innerText;
+
+        if(letter === q.correctAnswer){
+            btn.classList.add('bg-green-100','border-green-500');
+        }
+
+        if(letter === prefix && prefix !== q.correctAnswer){
+            btn.classList.add('bg-red-100','border-red-500');
+        }
+
+    });
+
+};
         window.prevQuestion = function() { if (activeQuizIndex > 0) { activeQuizIndex--; showQuestion(); } };
         window.nextQuestion = function() {
             if (activeQuizIndex < currentQuizData.length - 1) { activeQuizIndex++; showQuestion(); }
