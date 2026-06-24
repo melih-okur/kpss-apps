@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+    <title>Melih & Buse | KPSS 2026 Çift Kişilik Karargahı</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="MB KPSS">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%236366f1%22/><text y=%2270%22 x=%2215%22 fill=%22%23ffffff%22 font-family=%22system-ui,sans-serif%22 font-size=%2250%22 font-weight=%22900%22>M&amp;B</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2222%22 fill=%22%236366f1%22/><text y=%2270%22 x=%2215%22 fill=%22%23ffffff%22 font-family=%22system-ui,sans-serif%22 font-size=%2250%22 font-weight=%22900%22>M&amp;B</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        melihTech: { 50: '#f0fdf4', 500: '#10b981', 900: '#064e3b' },
+                        buseArt: { 50: '#fff1f2', 500: '#f43f5e', 900: '#881337' }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        .dark ::-webkit-scrollbar-thumb { background: #334155; }
+
+        /* ── Sekme animasyonu ── */
+        .screen { display: none; animation: fadeIn 0.3s ease; }
+        .screen.active { display: block; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+        /* ── Öğrenme Modu cevap renkleri ── */
+        .answer-correct  { border-color: #10b981 !important; background: rgba(16,185,129,0.12) !important; color: #065f46 !important; }
+        .answer-wrong    { border-color: #f43f5e !important; background: rgba(244,63,94,0.12) !important; color: #881337 !important; }
+        .dark .answer-correct { color: #6ee7b7 !important; }
+        .dark .answer-wrong   { color: #fda4af !important; }
+        .answer-correct-indicator::after { content:" ✓"; font-weight:900; }
+        .answer-wrong-indicator::after   { content:" ✗"; font-weight:900; }
+
+        /* ── İstatistik kartları ── */
+        .stat-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.8) 100%);
+            border: 1px solid rgba(226,232,240,0.8);
+            border-radius: 20px;
+            padding: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .stat-card:active { transform: scale(0.97); }
+        .dark .stat-card {
+            background: linear-gradient(135deg, rgba(15,23,42,0.8) 0%, rgba(30,41,59,0.6) 100%);
+            border-color: rgba(255,255,255,0.06);
+        }
+
+        /* ── Alt navigasyon ── */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; z-index: 45;
+            background: rgba(255,255,255,0.92); backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(226,232,240,0.8); padding: 8px 0 max(8px, env(safe-area-inset-bottom)); }
+        .dark .bottom-nav { background: rgba(2,6,23,0.92); border-color: rgba(255,255,255,0.06); }
+        .nav-btn { flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
+            padding: 6px 4px; border-radius:14px; transition: all 0.2s; cursor:pointer; border:none; background:transparent; }
+        .nav-btn span.nav-icon { font-size:20px; line-height:1; }
+        .nav-btn span.nav-label { font-size:9px; font-weight:700; letter-spacing:0.04em; color:#94a3b8; text-transform:uppercase; }
+        .nav-btn.active span.nav-label { color:#6366f1; }
+        .dark .nav-btn.active span.nav-label { color:#818cf8; }
+        .nav-btn.active { background: rgba(99,102,241,0.1); }
+
+        /* ── Yanlış Defter ── */
+        .wrong-card { border-radius:16px; padding:14px; border:1px solid rgba(244,63,94,0.25);
+            background: rgba(244,63,94,0.04); transition: 0.2s; }
+        .dark .wrong-card { background: rgba(244,63,94,0.08); border-color: rgba(244,63,94,0.3); }
+
+        /* ── Hedef ilerleme çubuğu ── */
+        .goal-bar { height:10px; border-radius:999px; background: rgba(226,232,240,1); overflow:hidden; }
+        .dark .goal-bar { background: rgba(30,41,59,1); }
+        .goal-fill { height:100%; border-radius:999px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6); transition: width 0.6s ease; }
+
+        /* ── Sınav modu seçici ── */
+        .mode-pill { padding: 6px 14px; border-radius:999px; font-size:11px; font-weight:700;
+            cursor:pointer; border:2px solid transparent; transition:all 0.2s; }
+        .mode-pill.active-mode { border-color:#6366f1; background:rgba(99,102,241,0.12); color:#6366f1; }
+        .dark .mode-pill.active-mode { color:#818cf8; }
+        .mode-pill:not(.active-mode) { border-color:#e2e8f0; color:#64748b; }
+        .dark .mode-pill:not(.active-mode) { border-color:#334155; color:#94a3b8; }
+
+        /* ── Konu başarı barları ── */
+        .subject-bar-wrap { margin-bottom:12px; }
+        .subject-bar-bg { height:8px; border-radius:999px; background:rgba(226,232,240,1); overflow:hidden; margin-top:4px; }
+        .dark .subject-bar-bg { background:rgba(30,41,59,1); }
+
+        /* ── Animasyonlu spinner ── */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .spin { animation: spin 1s linear infinite; }
+
+        /* ── Mobil main padding ── */
+        main { padding-bottom: 80px !important; }
+
+        /* ── Faz filtre butonları ── */
+        .phase-filter-btn { padding: 5px 12px; border-radius: 999px; font-size: 10px; font-weight: 700;
+            cursor: pointer; border: 2px solid transparent; transition: all 0.2s; }
+        .phase-filter-btn.active-filter { border-color: #6366f1; background: rgba(99,102,241,0.12); color: #6366f1; }
+        .dark .phase-filter-btn.active-filter { color: #818cf8; }
+        .phase-filter-btn:not(.active-filter) { border-color: #e2e8f0; color: #64748b; background: transparent; }
+        .dark .phase-filter-btn:not(.active-filter) { border-color: #334155; color: #94a3b8; }
+
+        /* ── Yanlış defter filtre aktif ── */
+        .wrong-filter-btn.active { border-color: #6366f1 !important; background: rgba(99,102,241,0.1) !important; color: #6366f1 !important; }
+        .dark .wrong-filter-btn.active { color: #818cf8 !important; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen pb-12 transition-colors duration-300">
+
+    <header class="no-print sticky top-0 z-40 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-900 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-tr from-indigo-600 to-rose-500 text-white p-2.5 rounded-2xl shadow-lg">
+                    <span class="font-mono font-black text-lg">M&B</span>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-sm md:text-base text-slate-900 dark:text-white flex items-center gap-1.5 tracking-tight">
+                        Melih & Buse <span class="text-xs font-normal text-slate-400">KPSS Karargahı</span>
+                    </h1>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                        <span id="sync-dot" class="w-2.5 h-2.5 rounded-full bg-slate-300"></span>
+                        <span id="sync-status" class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">Bağlantı Kuruluyor...</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button onclick="toggleTheme()" class="p-2.5 bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 rounded-xl transition border border-slate-200 dark:border-slate-800">
+                    <span id="theme-icon-light" class="hidden text-sm">☀️</span>
+                    <span id="theme-icon-dark" class="hidden text-sm">🌙</span>
+                </button>
+                <button onclick="openSettingsModal()" class="p-2.5 bg-indigo-50 dark:bg-slate-900 hover:bg-indigo-100 dark:hover:bg-slate-800 text-indigo-600 dark:text-indigo-400 rounded-xl transition border border-indigo-100 dark:border-slate-800" title="Bulut & AI Bağlantı Ayarları">
+                    <span class="text-sm">⚙️ Ayarlar</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 print-layout">
+
+        <!-- ══ EKRAN 1: ANA SAYFA ══ -->
+        <div id="screen-home" class="screen active">
+        
+        <div class="no-print bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800/80 p-4 mb-6 shadow-sm">
+            <div class="grid grid-cols-2 gap-3">
+                <button id="btn-user-melih" onclick="switchUser('melih')" class="flex flex-col sm:flex-row items-center justify-between p-3.5 rounded-2xl border-2 border-indigo-600 bg-indigo-50/40 dark:bg-indigo-950/20 text-left transition-all">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-indigo-600/20">M</div>
+                        <div>
+                            <span class="text-xs text-slate-400 block font-bold uppercase tracking-wider">💻 Melih'in Odası</span>
+                            <span class="text-sm font-extrabold text-slate-800 dark:text-slate-200">YBS Kariyer Planlayıcı</span>
+                        </div>
+                    </div>
+                    <div class="text-center sm:text-right mt-2 sm:mt-0">
+                        <span id="melih-progress-badge" class="text-xs bg-indigo-600 text-white px-2.5 py-1 rounded-full font-black">%0</span>
+                    </div>
+                </button>
+
+                <button id="btn-user-buse" onclick="switchUser('buse')" class="flex flex-col sm:flex-row items-center justify-between p-3.5 rounded-2xl border-2 border-transparent hover:border-slate-200 dark:hover:border-slate-800 bg-slate-50 dark:bg-slate-950/40 text-left transition-all">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-rose-500 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-rose-500/20">B</div>
+                        <div>
+                            <span class="text-xs text-slate-400 block font-bold uppercase tracking-wider">🎨 Buse'nin Odası</span>
+                            <span class="text-sm font-extrabold text-slate-800 dark:text-slate-200">Görsel Tasarım Planlayıcı</span>
+                        </div>
+                    </div>
+                    <div class="text-center sm:text-right mt-2 sm:mt-0">
+                        <span id="buse-progress-badge" class="text-xs bg-rose-500 text-white px-2.5 py-1 rounded-full font-black">%0</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Günlük İstatistik Kartları -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+            <div class="stat-card text-center">
+                <div class="text-2xl font-black text-indigo-500" id="stat-total-q">0</div>
+                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1">Toplam Soru</div>
+            </div>
+            <div class="stat-card text-center">
+                <div class="text-2xl font-black text-emerald-500" id="stat-total-c">0</div>
+                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1">Toplam Doğru</div>
+            </div>
+            <div class="stat-card text-center">
+                <div class="text-2xl font-black text-rose-500" id="stat-total-w">0</div>
+                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1">Toplam Yanlış</div>
+            </div>
+            <div class="stat-card text-center">
+                <div class="text-2xl font-black text-amber-500" id="stat-success-rate">%0</div>
+                <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mt-1">Başarı Oranı</div>
+            </div>
+        </div>
+
+        <!-- Günlük Hedef -->
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm mb-6">
+            <div class="flex items-center justify-between mb-3">
+                <h3 class="font-black text-xs text-slate-900 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                    🎯 Günlük Hedef
+                </h3>
+                <div class="flex gap-2">
+                    <button onclick="setDailyGoal(50)"  class="goal-preset-btn text-[10px] px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700 font-bold text-slate-500 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-800 transition">50</button>
+                    <button onclick="setDailyGoal(100)" class="goal-preset-btn text-[10px] px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700 font-bold text-slate-500 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-800 transition">100</button>
+                    <button onclick="setDailyGoal(150)" class="goal-preset-btn text-[10px] px-2.5 py-1 rounded-full border border-slate-200 dark:border-slate-700 font-bold text-slate-500 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-slate-800 transition">150</button>
+                </div>
+            </div>
+            <div class="goal-bar mb-2">
+                <div class="goal-fill" id="daily-goal-fill" style="width:0%"></div>
+            </div>
+            <div class="flex justify-between text-[10px] font-bold text-slate-400">
+                <span id="daily-goal-done">0 soru çözüldü</span>
+                <span id="daily-goal-target">Hedef: <span id="daily-goal-num">100</span> soru</span>
+            </div>
+        </div>
+
+        <div id="master-hero-banner" class="relative overflow-hidden rounded-3xl p-6 md:p-8 mb-6 transition-all duration-500 shadow-xl border border-slate-800 bg-slate-950 text-white">
+            <div class="absolute -right-10 -top-10 w-44 h-44 rounded-full blur-3xl opacity-20 bg-indigo-500"></div>
+            <div class="absolute -left-10 -bottom-10 w-44 h-44 rounded-full blur-3xl opacity-20 bg-rose-500"></div>
+
+            <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                <div class="space-y-2">
+                    <span id="hero-badge" class="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-950/40 text-indigo-400"></span>
+                    <h2 id="hero-title" class="text-2xl md:text-3xl font-extrabold tracking-tight text-white"></h2>
+                    <p id="hero-desc" class="text-xs md:text-sm text-slate-400 max-w-2xl leading-relaxed"></p>
+                </div>
+                
+                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl min-w-[180px] text-center shadow-lg relative overflow-hidden">
+                    <span class="text-[10px] font-black text-slate-400 tracking-widest uppercase block relative z-10">KAMP TAMAMLANMA</span>
+                    <span id="overall-percentage" class="text-4xl font-black text-emerald-400 block mt-1 relative z-10 drop-shadow-sm">%0</span>
+                    <div class="w-full bg-slate-800 h-1.5 rounded-full mt-3 overflow-hidden relative z-10">
+                        <div id="overall-bar" class="bg-emerald-400 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            
+            <div class="no-print lg:col-span-4 space-y-6">
+
+                <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-base">📊</span>
+                        <h3 class="font-black text-[10px] text-slate-900 dark:text-slate-200 uppercase tracking-wider">KPSS P3 Detaylı Puan Tahmini</h3>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-800 dark:text-slate-200">Türkçe Neti (Max 30):</span>
+                                <span id="tur-val" class="text-indigo-600 dark:text-indigo-400 font-extrabold">25</span>
+                            </div>
+                            <input type="range" id="net-tur" min="0" max="30" value="25" oninput="calculateEstimator(true)" class="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-600 dark:accent-indigo-400">
+                            <span class="text-[9px] text-slate-400 block mt-1">ÖSYM Dağılımı: 22 Anlam Bilgisi, 4 Dil Bilgisi, 4 Sözel Mantık</span>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-800 dark:text-slate-200">Matematik Neti (Max 30):</span>
+                                <span id="mat-val" class="text-emerald-500 dark:text-emerald-400 font-extrabold">18</span>
+                            </div>
+                            <input type="range" id="net-mat" min="0" max="30" value="18" oninput="calculateEstimator(true)" class="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                            <span class="text-[9px] text-slate-400 block mt-1">ÖSYM Dağılımı: 26 Temel Matematik/Problem, 4 Geometri</span>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-800 dark:text-slate-200">Tarih Neti (Max 27):</span>
+                                <span id="tar-val" class="text-rose-500 dark:text-rose-400 font-extrabold">20</span>
+                            </div>
+                            <input type="range" id="net-tar" min="0" max="27" value="20" oninput="calculateEstimator(true)" class="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-rose-500">
+                            <span class="text-[9px] text-slate-400 block mt-1">ÖSYM Dağılımı: 3 İlk Türk Dev., 9 Osmanlı, 12 İnkılap, 3 Çağdaş</span>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-800 dark:text-slate-200">Coğrafya Neti (Max 18):</span>
+                                <span id="cog-val" class="text-teal-500 dark:text-teal-400 font-extrabold">12</span>
+                            </div>
+                            <input type="range" id="net-cog" min="0" max="18" value="12" oninput="calculateEstimator(true)" class="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-teal-500">
+                            <span class="text-[9px] text-slate-400 block mt-1">ÖSYM Dağılımı: 7 Fiziki, 3 Beşeri, 8 Ekonomik Coğrafya</span>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold mb-1">
+                                <span class="text-slate-800 dark:text-slate-200">Vatandaşlık & Güncel Neti (Max 15):</span>
+                                <span id="vat-val" class="text-amber-500 dark:text-amber-400 font-extrabold">10</span>
+                            </div>
+                            <input type="range" id="net-vat" min="0" max="15" value="10" oninput="calculateEstimator(true)" class="w-full h-1 bg-slate-200 dark:bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500">
+                            <span class="text-[9px] text-slate-400 block mt-1">ÖSYM Dağılımı: 9 Anayasa & İdare Hukuku, 6 Güncel Bilgiler</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-3.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs">
+                        <div>
+                            <span class="text-slate-400 block text-[9px] uppercase font-bold">Toplam Net</span>
+                            <span id="total-net-display" class="font-extrabold text-slate-800 dark:text-slate-200 text-sm">85 Net</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-slate-400 block text-[9px] uppercase font-bold">Öngörülen Puan</span>
+                            <span id="estimated-score" class="text-base font-black text-emerald-500 dark:text-emerald-400">84.50 Puan</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-indigo-50 dark:bg-slate-900 rounded-3xl p-5 border border-indigo-100 dark:border-slate-800 shadow-sm space-y-3">
+                    <h4 class="font-extrabold text-xs text-indigo-900 dark:text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <span>💡</span> KPSS Stratejik İpucu Kartı
+                    </h4>
+                    <p class="text-xs text-indigo-950/80 dark:text-slate-300 leading-relaxed">
+                        <strong>YBS & Görsel Tasarım Atamaları:</strong> KPSS P3 puanı her çift yılda (2026) merkezi yerleştirmelerde kullanılır. Netlerinizi artırmak için her gün aksatmadan paragraf rutini tamamlamalısınız.
+                    </p>
+                </div>
+
+                <div id="career-card" class="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm transition-all duration-300"></div>
+
+            </div>
+
+            <!-- Faz Filtre Butonları + Program Listesi -->
+            <div class="lg:col-span-8 space-y-4">
+                <div class="flex flex-wrap gap-2 no-print">
+                    <button onclick="filterPhase('all')" id="filter-all" class="phase-filter-btn active-filter">Tümü</button>
+                    <button onclick="filterPhase('p1')" id="filter-p1" class="phase-filter-btn">1. Aşama</button>
+                    <button onclick="filterPhase('p2')" id="filter-p2" class="phase-filter-btn">2. Aşama</button>
+                    <button onclick="filterPhase('p3')" id="filter-p3" class="phase-filter-btn">3. Aşama</button>
+                    <button onclick="filterPhase('p4')" id="filter-p4" class="phase-filter-btn">4. Aşama</button>
+                    <button onclick="filterPhase('camp')" id="filter-camp" class="phase-filter-btn">Deneme Kampı</button>
+                </div>
+                <div id="schedule-container" class="space-y-4"></div>
+            </div>
+
+        </div>
+        </div><!-- /screen-home -->
+
+        <!-- ══ EKRAN 2: İSTATİSTİKLER ══ -->
+        <div id="screen-stats" class="screen">
+            <div class="mb-6">
+                <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">📈 İstatistikler & Net Takip</h2>
+                <p class="text-xs text-slate-400 mt-1">Konu bazlı başarı analizi ve günlük gelişim grafiği</p>
+            </div>
+
+            <!-- Konu Başarı Analizi -->
+            <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm mb-6">
+                <h3 class="font-black text-xs text-slate-900 dark:text-slate-200 uppercase tracking-wider mb-4">📚 Konu Bazlı Başarı Oranı</h3>
+                <div id="subject-analysis-container">
+                    <p class="text-xs text-slate-400 text-center py-4">Sınav tamamladıktan sonra konu analizin burada görünecek.</p>
+                </div>
+                <!-- Zayıf konu uyarısı -->
+                <div id="weak-subject-banner" class="hidden mt-4 p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 rounded-2xl">
+                    <p class="text-xs font-bold text-amber-700 dark:text-amber-400" id="weak-subject-text">⚠️ En Zayıf Alan: —</p>
+                </div>
+            </div>
+
+            <!-- Net Takip Grafiği -->
+            <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="font-black text-xs text-slate-900 dark:text-slate-200 uppercase tracking-wider">📊 Günlük Net Gelişim Grafiği</h3>
+                    <button onclick="openNetEntryModal()" class="text-[10px] bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-xl font-bold transition">+ Net Ekle</button>
+                </div>
+                <div style="position:relative;height:220px;">
+                    <canvas id="net-chart"></canvas>
+                </div>
+                <p class="text-[10px] text-slate-400 mt-2 text-center">Son 10 günün toplam net gelişimi</p>
+            </div>
+
+            <!-- Sınav Geçmişi -->
+            <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm">
+                <h3 class="font-black text-xs text-slate-900 dark:text-slate-200 uppercase tracking-wider mb-4">🗂 Sınav Geçmişi</h3>
+                <div id="quiz-history-container">
+                    <p class="text-xs text-slate-400 text-center py-4">Henüz sınav tamamlanmadı.</p>
+                </div>
+            </div>
+        </div><!-- /screen-stats -->
+
+        <!-- ══ EKRAN 3: YANLIŞ DEFTER ══ -->
+        <div id="screen-wrong" class="screen">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-xl font-extrabold text-slate-900 dark:text-white">📓 Yanlış Defterim</h2>
+                    <p class="text-xs text-slate-400 mt-1">Yanlış yaptığın sorular otomatik kaydedilir</p>
+                </div>
+                <button onclick="clearWrongNotes()" class="text-[10px] bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/40 px-3 py-1.5 rounded-xl font-bold transition hover:bg-rose-100">🗑 Temizle</button>
+            </div>
+            
+            <!-- Filtre -->
+            <div class="flex gap-2 mb-4 flex-wrap" id="wrong-filter-bar">
+                <button onclick="filterWrong('all')" class="wrong-filter-btn active text-[10px] px-3 py-1.5 rounded-full border-2 border-indigo-500 bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 font-bold transition">Tümü</button>
+                <button onclick="filterWrong('Türkçe')" class="wrong-filter-btn text-[10px] px-3 py-1.5 rounded-full border-2 border-transparent bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold transition">Türkçe</button>
+                <button onclick="filterWrong('Matematik')" class="wrong-filter-btn text-[10px] px-3 py-1.5 rounded-full border-2 border-transparent bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold transition">Matematik</button>
+                <button onclick="filterWrong('Tarih')" class="wrong-filter-btn text-[10px] px-3 py-1.5 rounded-full border-2 border-transparent bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold transition">Tarih</button>
+                <button onclick="filterWrong('Coğrafya')" class="wrong-filter-btn text-[10px] px-3 py-1.5 rounded-full border-2 border-transparent bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold transition">Coğrafya</button>
+                <button onclick="filterWrong('Vatandaşlık')" class="wrong-filter-btn text-[10px] px-3 py-1.5 rounded-full border-2 border-transparent bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-bold transition">Vatandaşlık</button>
+            </div>
+
+            <div id="wrong-notes-container" class="space-y-3">
+                <div class="text-center py-12">
+                    <span class="text-4xl block mb-3">🎉</span>
+                    <p class="text-sm font-bold text-slate-400">Henüz yanlış soru yok!</p>
+                    <p class="text-xs text-slate-400 mt-1">Sınavlarda yanlış yaptığın sorular burada toplanacak.</p>
+                </div>
+            </div>
+        </div><!-- /screen-wrong -->
+
+    </main>
+
+    <!-- Alt Navigasyon -->
+    <nav class="bottom-nav no-print">
+        <div class="flex items-center justify-around max-w-lg mx-auto px-2">
+            <button class="nav-btn active" id="nav-home" onclick="switchScreen('home')">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Ana Sayfa</span>
+            </button>
+            <button class="nav-btn" id="nav-stats" onclick="switchScreen('stats')">
+                <span class="nav-icon">📈</span>
+                <span class="nav-label">İstatistik</span>
+            </button>
+            <button class="nav-btn" id="nav-wrong" onclick="switchScreen('wrong')">
+                <span class="nav-icon">📓</span>
+                <span class="nav-label">Yanlış Defter</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white text-xs font-bold px-5 py-3 rounded-2xl shadow-2xl transition-all duration-300 translate-y-24 opacity-0 flex items-center gap-2">
+        <span>✓</span><span id="toast-text"></span>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="no-print fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 md:p-8 max-w-xl w-full mx-4 border border-slate-200 dark:border-slate-800 shadow-2xl scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-start border-b border-slate-100 dark:border-slate-800 pb-4 mb-4">
+                <div>
+                    <span class="bg-indigo-500/10 text-indigo-500 text-[10px] font-black px-2.5 py-1 rounded-full border border-indigo-500/20 uppercase tracking-widest">Oda & AI Konfigürasyonu</span>
+                    <h3 class="text-lg font-extrabold text-slate-900 dark:text-white mt-1">Bağlantı Ayarları</h3>
+                </div>
+                <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">✕</button>
+            </div>
+
+            <div class="space-y-4 text-xs sm:text-sm">
+                <p class="text-slate-500 dark:text-slate-400 leading-relaxed text-xs">
+                    Melih kanka, Firebase veritabanı kurulumunuz zaten hazır! Telefonunuza kurduğunuzda <strong>Groq API Anahtarınızı</strong> buraya bir kez yapıştırmanız yeterlidir.
+                </p>
+
+                <!-- Groq API Key Input -->
+                <div class="space-y-1.5">
+                    <label class="block font-bold text-slate-700 dark:text-slate-300">Groq AI API Anahtarı:</label>
+                    <input type="password" id="input-groq-key" placeholder="gsk_..." class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    <span class="text-[9px] text-slate-400 block">Groq API anahtarı ile AI sınav motoru aktif hale gelir. <a href="https://console.groq.com" target="_blank" class="text-indigo-500 underline">console.groq.com</a> adresinden ücretsiz alabilirsiniz.</span>
+                </div>
+
+                <!-- Firebase JSON Configuration Area -->
+                <div class="space-y-1.5">
+                    <label class="block font-bold text-slate-700 dark:text-slate-300">Firebase Konfigürasyonu (JSON):</label>
+                    <textarea id="input-firebase-config" placeholder='Firebase Config JSON verileri...' class="w-full h-24 p-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs font-mono text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
+                    <span class="text-[9px] text-slate-400 block">Melih & Buse veritabanı ayarlarınız kod içinde ön tanımlıdır. İsterseniz buradan değiştirebilirsiniz.</span>
+                </div>
+
+                <!-- Shared Room Code -->
+                <div class="space-y-1.5">
+                    <label class="block font-bold text-slate-700 dark:text-slate-300">Ortak Oda Kodu:</label>
+                    <input type="text" id="input-room-id" placeholder="Örn: melih-buse-2026" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    <span class="text-[9px] text-slate-400 block">Buse ile tamamen aynı ortak oda kodunu yazmalısınız.</span>
+                </div>
+
+                <div class="flex gap-2.5 justify-end pt-2">
+                    <button onclick="closeSettingsModal()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-xs font-bold transition">Kapat</button>
+                    <button onclick="saveSettings()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition shadow-md shadow-indigo-600/10">Ayarları Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Quiz Modal -->
+    <div id="quiz-modal" class="no-print fixed inset-0 z-50 flex items-center justify-center bg-black/75 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 md:p-8 max-w-2xl w-full mx-4 border border-slate-200 dark:border-slate-800 shadow-2xl scale-95 transition-transform duration-300 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-start border-b border-slate-100 dark:border-slate-800 pb-4 mb-4">
+                <div>
+                    <span id="quiz-badge" class="bg-indigo-500/10 text-indigo-500 text-[10px] font-black px-2.5 py-1 rounded-full border border-indigo-500/20 uppercase tracking-widest">Groq AI Sınav Motoru</span>
+                    <h3 id="quiz-title" class="text-lg font-extrabold text-slate-900 dark:text-white mt-1">ÖSYM Seviye Testi</h3>
+                    <!-- Mod Seçici -->
+                    <div class="flex gap-2 mt-2" id="quiz-mode-selector">
+                        <button onclick="setQuizMode('exam')" id="mode-exam" class="mode-pill active-mode">📝 Sınav Modu</button>
+                        <button onclick="setQuizMode('learn')" id="mode-learn" class="mode-pill">📖 Öğrenme Modu</button>
+                    </div>
+                </div>
+                <button onclick="closeQuizModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 ml-4">✕</button>
+            </div>
+
+            <div id="quiz-loading" class="flex flex-col items-center justify-center py-12 space-y-4">
+                <div class="w-10 h-10 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+                <p class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">AI KPSS Sorularını Hazırlıyor...</p>
+                <p class="text-[10px] text-slate-400 max-w-xs text-center">Bu günün müfredatına özel 30 eleyici ÖSYM formatında test hazırlanıyor.</p>
+            </div>
+
+            <!-- DÜZELTME: hidden+flex çakışması giderildi; hidden yerine display:none kontrolü JS ile yapılıyor -->
+            <div id="quiz-error" class="hidden flex-col items-center justify-center py-8 text-center space-y-3">
+                <span class="text-3xl">⚠️</span>
+                <p class="text-sm font-bold text-rose-500">Yapay Zeka Hazırlık Hatası</p>
+                <p id="quiz-error-msg" class="text-xs text-slate-400 max-w-md">Lütfen internet bağlantınızı kontrol edip tekrar deneyiniz.</p>
+                <button onclick="retryQuizGeneration()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition mt-2">Yeniden Dene</button>
+            </div>
+
+            <div id="quiz-play" class="hidden space-y-5">
+                <div class="flex justify-between items-center text-xs text-slate-400 font-bold uppercase">
+                    <div class="flex items-center gap-2">
+                        <span id="quiz-subject" class="bg-indigo-100 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 px-2 py-1 rounded-lg">Konu</span>
+                        <span id="quiz-difficulty" class="bg-amber-100 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 px-2 py-1 rounded-lg text-[10px]">Orta</span>
+                    </div>
+                    <span id="quiz-counter">Soru 1 / 30</span>
+                </div>
+                
+                <!-- İlerleme çubuğu -->
+                <div class="w-full bg-slate-100 dark:bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                    <div id="quiz-progress-bar" class="h-full bg-indigo-500 rounded-full transition-all duration-300" style="width:0%"></div>
+                </div>
+
+                <div class="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+                    <p id="quiz-question-text" class="text-sm font-extrabold text-slate-800 dark:text-slate-200 leading-relaxed"></p>
+                </div>
+
+                <div id="quiz-options-container" class="space-y-2"></div>
+
+                <!-- Öğrenme Modu Açıklama Alanı -->
+                <div id="learn-mode-explanation" class="hidden p-4 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800/40 rounded-2xl">
+                    <p class="text-[10px] font-black text-emerald-600 dark:text-emerald-400 uppercase tracking-wider mb-2">📖 Açıklamalı Çözüm</p>
+                    <p id="learn-mode-explanation-text" class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed"></p>
+                </div>
+
+                <div class="flex justify-between items-center pt-4 border-t border-slate-100 dark:border-slate-800">
+                    <button id="quiz-prev-btn" onclick="prevQuestion()" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-bold transition">◀ Önceki</button>
+                    <button id="quiz-next-btn" onclick="nextQuestion()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition">Sonraki ▶</button>
+                </div>
+            </div>
+
+            <div id="quiz-results" class="hidden space-y-5">
+                <div class="text-center py-5 bg-slate-50 dark:bg-slate-950 rounded-2xl border border-slate-100 dark:border-slate-800">
+                    <span id="quiz-result-emoji" class="text-4xl block">🏆</span>
+                    <h4 class="font-extrabold text-base text-slate-900 dark:text-white mt-2">Deneme Sınavı Bitti!</h4>
+                    <p class="text-xs text-slate-400 mt-1" id="quiz-score-summary">30 sorudan 0 doğru yanıtladın.</p>
+                    <!-- Konu başarı özeti -->
+                    <div id="quiz-subject-breakdown" class="mt-4 text-left px-4 space-y-3"></div>
+                    <!-- Zayıf konu uyarısı -->
+                    <div id="quiz-weak-subject" class="hidden mx-4 mt-3 p-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 rounded-xl">
+                        <p class="text-xs font-bold text-amber-700 dark:text-amber-400" id="quiz-weak-subject-text">⚠️</p>
+                    </div>
+                    <!-- AI Koç Tavsiyesi -->
+                    <div id="quiz-coach-advice" class="mx-4 mt-3 p-3 bg-indigo-50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800/40 rounded-xl hidden">
+                        <p class="text-xs text-indigo-700 dark:text-indigo-400 font-bold" id="quiz-coach-text"></p>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <h5 class="font-bold text-xs uppercase tracking-wider text-slate-400">Detaylı Çözümler ve Analiz</h5>
+                    <div id="quiz-review-container" class="space-y-4"></div>
+                </div>
+
+                <button onclick="closeQuizModal()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition mt-4">Analizi Bitir ve Kapat</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Net Girişi Modal -->
+    <div id="net-entry-modal" class="no-print fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 max-w-sm w-full mx-4 border border-slate-200 dark:border-slate-800 shadow-2xl scale-95 transition-transform duration-300">
+            <h4 class="font-extrabold text-slate-900 dark:text-white text-base mb-1">📊 Günlük Net Gir</h4>
+            <p class="text-xs text-slate-400 mb-4">Bugün çözdüğün sınavın toplam netini gir</p>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Toplam Net</label>
+                    <input type="number" id="net-entry-value" min="0" max="120" step="0.5" placeholder="Örn: 78.5" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="text-xs font-bold text-slate-600 dark:text-slate-300 block mb-1">Not (isteğe bağlı)</label>
+                    <input type="text" id="net-entry-note" placeholder="Örn: Deneme 3 - Tarih zayıf" class="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+            </div>
+            <div class="flex gap-2.5 justify-end mt-5">
+                <button onclick="closeNetEntryModal()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-xl text-xs font-bold transition">İptal</button>
+                <button onclick="saveNetEntry()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition">Kaydet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Confirm Modal -->
+    <div id="custom-modal" class="no-print fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-6 max-w-sm w-full mx-4 border border-slate-200 dark:border-slate-800 shadow-2xl scale-95 transition-transform duration-300">
+            <h4 class="font-extrabold text-slate-900 dark:text-white text-base mb-2" id="modal-title">Emin misiniz?</h4>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-5 leading-relaxed" id="modal-desc">Bu işlem geri alınamaz.</p>
+            <div class="flex items-center justify-end gap-2.5">
+                <button id="modal-cancel-btn" class="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-bold rounded-xl transition">İptal</button>
+                <button id="modal-confirm-btn" class="px-4 py-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold rounded-xl transition">Evet, Sıfırla</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // ─── 75 Günlük Program Verisi ─────────────────────────────────────────────
+        const scheduleData = [
+            // Aşama 1 (1-15)
+            { id: 1, phase: 'p1', title: '1. GÜN: Türkçe Anlam Bilgisi & Matematik Giriş', desc: 'Sıfırdan işlem önceliği ve paragraf altyapısıyla başlıyoruz kanka.', tasks: ['Sabah ilk iş: 25 Paragraf sorusu çöz ve analiz et.', 'Türkçe: Sözcükte Anlam, Cümlenin Anlamı ve Yorumu (Konu çalışması + 40 Soru).', 'Matematik: Temel Kavramlar, İşlem Önceliği ve Sayı Kümeleri (Konu çalışması + 30 Soru).'] },
+            { id: 2, phase: 'p1', title: '2. GÜN: Tarih Giriş & Çift Sayılar', desc: 'İslamiyet öncesini öğrenip matematikte tek-çift kavramlarını eritiyoruz.', tasks: ['Paragraf Rutini: 25 adet yeni nesil paragraf sorusu çöz.', 'Tarih: İslamiyet Öncesi Türk Tarihi (Kültür ve Medeniyet odaklı çalış - Konu + 30 Soru).', 'Matematik: Tek-Çift Sayılar, Pozitif-Negatif Sayılar (Konu çalışması + 30 Soru).'] },
+            { id: 3, phase: 'p1', title: '3. GÜN: Türk-İslam Devletleri & Sayı Dizileri', desc: 'Türk-İslam tarihi ve ardışık sayılar günü.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu çöz ve hatalarına geri dön.', 'Tarih: İlk Türk-İslam Devletleri ve Kültür Medeniyeti (Konu anlatımı + 40 Soru).', 'Matematik: Ardışık Sayılar ve Asal Sayılar (Konu anlatımı + 30 Soru).'] },
+            { id: 4, phase: 'p1', title: '4. GÜN: Türkiye\'nin Coğrafi Konumu & Bölünebilme', desc: 'Coğrafyada ilk netimizi alıyor, bölme kurallarını kavrıyoruz.', tasks: ['Paragraf Rutini: 25 adet paragraf sorusu çöz.', 'Coğrafya: Türkiye\'nin Coğrafi Konumu, Matematik ve Özel Konum Etkileri (Konu çalışması + 40 Soru).', 'Matematik: Bölme ve Bölünebilme Kuralları (Konu anlatımı + 35 Soru).'] },
+            { id: 5, phase: 'p1', title: '5. GÜN: Osmanlı Devleti Kuruluş & Faktöriyel', desc: 'Büyük imparatorluğun yükselişi ve faktöriyel mantığı.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu çöz.', 'Tarih: Osmanlı Devleti Kuruluş ve Yükselme Dönemi Önemli Siyasi Olaylar (Konu çalışması + 30 Soru).', 'Matematik: Asal Çarpanlara Ayırma ve Faktöriyel Kavramı (Konu anlatımı + 40 Soru).'] },
+            { id: 6, phase: 'p1', title: '6. GÜN: Türkçe Ses Bilgisi & Basamak Çözümleme', desc: 'Sınavda kesin çıkacak iki konuyu birden hallediyoruz.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu çöz.', 'Türkçe: Ses Bilgisi (Sınavda kesin 1 soru gelir - Konu + 40 Soru).', 'Matematik: Sayı Basamakları ve Çözümleme (Konu anlatımı + 40 Soru).'] },
+            { id: 7, phase: 'p1', title: '7. GÜN: Haftalık Genel Değerlendirme & Dinlenme', desc: 'İlk 6 günün yorgunluğunu atıp, eksik kısımları cilalıyoruz.', tasks: ['Rutini aksatma: 30 Paragraf sorusu çöz.', 'Genel Tekrar: İlk 6 gün boyunca Tarih ve Coğrafyadan çıkardığın tüm kısa özetleri gözden geçir.', 'Matematik Kampı: İlk haftanın matematikte çözemediğin veya boş bıraktığın sorularının çözümlerini öğren ve tekrar çöz.'] },
+            { id: 8, phase: 'p1', title: '8. GÜN: Rasyonel Sayılar & Osmanlı Teşkilatı 1', desc: 'Matematikte kesin 2 net getiren rasyonel sayılara hücum.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu çöz.', 'Matematik: Rasyonel ve Ondalık Sayılar (Sınavda kesin 2 soru gelir - Konu + 50 Soru).', 'Tarih: Osmanlı Kültür ve Teşkilat Yapısı - 1 (Merkez Teşkilatı, Divan Üyeleri, Saray yapısı).'] },
+            { id: 9, phase: 'p1', title: '9. GÜN: Basit Eşitsizlikler & Osmanlı Teşkilatı 2', desc: 'Matematikte eşitsizlik mantığı ve Osmanlı hazinesi.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Matematik: Birinci Dereceden Basit Eşitsizlikler ve Sıralama (Konu + 40 Soru).', 'Tarih: Osmanlı Kültür ve Teşkilat Yapısı - 2 (Toprak Sistemi, Ordu, Taşra ve Maliye).'] },
+            { id: 10, phase: 'p1', title: '10. GÜN: Türkiye Yer Şekilleri & Mutlak Değer', desc: 'Coğrafyanın en geniş konusuna haritalarla giriş yapıyoruz.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Coğrafya: Türkiye\'nin Yer Şekilleri, Dağlar, Ovalar ve Platolar - Harita çalışması (Konu + 40 Soru).', 'Matematik: Mutlak Değer (Mantığını kavra + 40 Soru).'] },
+            { id: 11, phase: 'p1', title: '11. GÜN: Vatandaşlık Giriş & Üslü Sayılar', desc: 'Vatandaşlık için harika bir temel atma günü.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Vatandaşlık: Temel Hukuk Kavramları (Hak, borç, ehliyet, hukukun kaynakları - Konu + 30 Soru).', 'Matematik: Üslü Sayılar (Konu + 50 Soru).'] },
+            { id: 12, phase: 'p1', title: '12. GÜN: Dil Bilgisinin Temeli & Köklü Sayılar', desc: 'Türkçede sözcük yapısı ve matematikte köklü sayılar.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Türkçe: Sözcükte Yapı / Kök-Ek Bilgisi (Dil bilgisinin temelidir - Konu + 40 Soru).', 'Matematik: Köklü Sayılar (Konu + 50 Soru).'] },
+            { id: 13, phase: 'p1', title: '13. GÜN: Türkiye\'nin İklimi & Çarpanlara Ayırma', desc: 'Coğrafya iklim elemanları ve çarpanlara ayırma günü.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Coğrafya: Türkiye\'nin İklimi, Basınç Merkezleri, Rüzgarlar ve Bitki Örtüsü (Konu + 40 Soru).', 'Matematik: Çarpanlara Ayırma ve Özdeşlikler (Konu anlatımı + 40 Soru).'] },
+            { id: 14, phase: 'p1', title: '14. GÜN: Osmanlı Çöküş / Islahatlar & Denklemler', desc: 'Osmanlı\'nın en sancılı yüzyılları ve problemlere geçiş köprüsü.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Tarih: Osmanlı XVII. ve XVIII. Yüzyıl Islahatları, Siyasi Gelişmeleri (Konu + 40 Soru).', 'Matematik: Birinci Dereceden Denklemler ve Denklem Çözme Mantığı.'] },
+            { id: 15, phase: 'p1', title: '15. GÜN: İlk Ara Kontrol & Seviye Belirleme', desc: 'Şimdiye kadarki çalışmalarımızın meyvesini deneme ile göreceğiz.', tasks: ['Süre Sınırı Koymadan: İlk Genel Yetenek - Genel Kültür denemesini sakin kafa ile çöz.', 'Deneme Analizi: Doğru ve yanlışlarını tek tek Excel veya bir kağıda kaydet. Netlerine takılma, sadece konuları ölç.', 'Zayıf Konu Tespiti: İlk iki haftanın eksiklerini belirleyip not defterine not et.'] },
+            // Aşama 2 (16-30)
+            { id: 16, phase: 'p2', title: '16. GÜN: Oran-Orantı & Osmanlı En Uzun Yüzyıl', desc: 'Problemlerin babasına ve dağılma dönemine adım atıyoruz.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Matematik: Oran - Orantı Mantığı (Problem çözmenin anahtarıdır - Konu + 40 Soru).', 'Tarih: Osmanlı En Uzun Yüzyıl (XIX. Yüzyıl Dağılma Dönemi ve Islahatları - Konu + 40 Soru).'] },
+            { id: 17, phase: 'p2', title: '17. GÜN: Sayı ve Kesir Problemleri & Balkan Savaşları', desc: 'Problemlerin en çok soru gelen kısmını yarılamaya başlıyoruz.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Matematik: Sayı ve Kesir Problemleri - Giriş (Denklem kurma mantığı - Konu + 50 Temel Soru).', 'Tarih: XX. Yüzyıl Başlarında Osmanlı (Trablusgarp, Balkan Savaşları ve I. Dünya Savaşı Giriş).'] },
+            { id: 18, phase: 'p2', title: '18. GÜN: Sayı-Kesir Problem Geliştirme & I. Dünya Savaşı', desc: 'Problemlerde derinleşip tarihi cephelere odaklanıyoruz.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Matematik: Sayı ve Kesir Problemleri - Geliştirme (Yeni nesil ve çıkmış soru tipleriyle 50 Soru).', 'Tarih: I. Dünya Savaşı (Cepheler, nedenler, gizli antlaşmalar ve sonuçlar - Konu + 40 Soru).'] },
+            { id: 19, phase: 'p2', title: '19. GÜN: Yaş Problemleri & Mondros ve Cemiyetler', desc: 'Hızlıca yaş problemlerini bitirip Mondros sonrasına bakıyoruz.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Matematik: Yaş Problemleri (Konu + 40 Soru).', 'Tarih: Mondros Ateşkesi, İşgaller ve Cemiyetler (Cemiyet şifreleri - Konu + 30 Soru).'] },
+            { id: 20, phase: 'p2', title: '20. GÜN: Yüzde-Kar-Zarar Problemleri & Kurtuluş Savaşı', desc: 'En stratejik problem türü ve kurtuluş hazırlık dönemi.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Matematik: Yüzde ve Kar-Zarar Problemleri - Giriş (Konu + 40 Temel Soru).', 'Tarih: Kurtuluş Savaşı Hazırlık Dönemi - 1 (Havza, Amasya, Erzurum, Sivas Kongreleri).'] },
+            { id: 21, phase: 'p2', title: '21. GÜN: Haftalık Değerlendirme & Hata Temizliği', desc: 'Yüzde hesaplarını ve Kurtuluş Savaşı kongre kronolojisini kafada oturtma günü.', tasks: ['Rutini aksatma: 30 Paragraf sorusu.', 'Problemleri Erteleme: Yüzde ve Kar-Zarar problemlerinden yapamadığın soruları tekrar çözüp formülleri yaz.', 'Kronoloji Kontrolü: Kongreler arasındaki sıra ilişkisini, hangisinde ilk kez milli sınırlardan bahsedildiğini ezberle.'] },
+            { id: 22, phase: 'p2', title: '22. GÜN: Yüzde-Kar-Zarar İleri & Kurtuluş Savaşı 2', desc: 'Soru kalıplarını derinleştiriyoruz.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Matematik: Yüzde ve Kar-Zarar Problemleri - İleri Seviye (Sınav tarzı 50 Soru).', 'Tarih: Kurtuluş Savaşı Hazırlık Dönemi - 2 (Amasya Görüşmeleri, Misakımilli, I. TBMM Dönemi).'] },
+            { id: 23, phase: 'p2', title: '23. GÜN: Karışım ve İşçi Problemleri & Savaş Cepheleri', desc: 'Az soru gelen ama bilinmesi gereken pratik problemler ve sıcak savaş dönemi.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Matematik: Karışım Problemleri ve İşçi Problemleri (Konu + 40 Soru).', 'Tarih: Kurtuluş Savaşı Cepheler Dönemi (Doğu, Güney ve Batı Cephesi Savaşları - Konu + 40 Soru).'] },
+            { id: 24, phase: 'p2', title: '24. GÜN: Hareket ve Hız Problemleri & Lozan Antlaşması', desc: 'Hız problemlerini formüllerle çözüp Lozan\'ın maddelerini yutuyoruz.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Matematik: Hareket (Hız) Problemleri (Konu + 40 Soru).', 'Tarih: Mudanya Ateşkesi ve Lozan Barış Antlaşması (Detaylıca çalışılacak - Konu + 40 Soru).'] },
+            { id: 25, phase: 'p2', title: '25. GÜN: Türkçe Sözcük Türleri 1 & Coğrafya Nüfus', desc: 'İsimler, sıfatlar ve Türkiye\'nin beşeri coğrafyası.', tasks: ['Paragraf Rutini: 20 Paragraf sorusu + 1 Sözel Mantık sorusu çöz.', 'Türkçe: Sözcük Türleri - İsimler, Sıfatlar, Zamirler, Zarflar (Konu + 50 Soru).', 'Coğrafya: Türkiye\'de Nüfus, Göç ve Yerleşme Yapısı (Grafik yorumlama odaklı - Konu + 40 Soru).'] },
+            { id: 26, phase: 'p2', title: '26. GÜN: Tablo-Grafik Yorumlama & Atatürk İlkeleri', desc: 'En garanti netleri getiren iki stratejik başlık.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Matematik: Grafik ve Tablo Problemleri (Sayısal mantığın da temelidir - Konu + 40 Soru).', 'Tarih: Atatürk İlkeleri (Anahtar kelimelerle çalışılacak - Konu + 30 Soru).'] },
+            { id: 27, phase: 'p2', title: '27. GÜN: Türkçe Sözcük Türleri 2 & Türkiye Tarımı', desc: 'Edatlar, bağlaçlar ve harita üzerinden tarım coğrafyası.', tasks: ['Paragraf/Sözel Mantık: 20 Paragraf + 1 Sözel Mantık sorusu çöz.', 'Türkçe: Sözcük Türleri - Edat, Bağlaç, Ünlem ve Fiiller / Eylemler (Konu + 40 Soru).', 'Coğrafya: Türkiye\'de Tarım ve Hayvancılık Faaliyetleri (Harita destekli - Konu + 40 Soru).'] },
+            { id: 28, phase: 'p2', title: '28. GÜN: Anayasa Tarihi & Kümeler', desc: 'Vatandaşlıkta devlet biçimleri ve matematikte kümeler.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Vatandaşlık: Devlet Biçimleri, Hükümet Sistemleri ve Türk Anayasa Tarihi Gelişmeleri (Konu + 30 Soru).', 'Matematik: Kümeler ve Kartezyen Çarpım (Konu + 45 Soru).'] },
+            { id: 29, phase: 'p2', title: '29. GÜN: Atatürk İnkılapları & Türkiye Madenleri', desc: 'Ezberi yoğun ama soru değeri yüksek iki kilit alan.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Tarih: Atatürk Dönemi İnkılapları (Siyasi, Hukuki, Eğitim ve Toplumsal Alanda Yapılanlar - Konu + 50 Soru).', 'Coğrafya: Türkiye\'de Madenler ve Enerji Kaynakları (Harita üzerine mutlaka not alın - Konu + 40 Soru).'] },
+            { id: 30, phase: 'p2', title: '30. GÜN: Yolun Yarısı! Branş Denemeleri', desc: 'Yarı yolu bizzat ölçerek kutluyoruz.', tasks: ['Türkçe & Tarih Branş Denemesi: Süre tutarak birer adet Türkçe ve Tarih branş denemesi çöz.', 'İlerleme Değerlendirmesi: Hangi derste daha çok eksiğin kaldığını not defterine ekle ve o konuları bu hafta tekrar et.', 'Matematik Temizliği: Problemlerden eksik kaldığını hissettiğin soru tiplerini baştan çöz.'] },
+            // Aşama 3 (31-45)
+            { id: 31, phase: 'p3', title: '31. GÜN: Fonksiyonlar & Atatürk Dış Politikası', desc: 'Fonksiyonların mantığı ve Cumhuriyet dönemi dış gelişmeler.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Matematik: Fonksiyonlar (Sınavda her yıl kesin 1 adet soru gelir - Konu + 40 Soru).', 'Tarih: Atatürk Dönemi Türk Dış Politikası (1923-1930 ve 1930-1939 Dönemleri - Konu + 35 Soru).'] },
+            { id: 32, phase: 'p3', title: '32. GÜN: Cümlenin Ögeleri & Coğrafya Sanayi/Ticaret', desc: 'Türkçede ögelerin bulunması ve Türkiye ticaret ağı.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Türkçe: Cümlenin Ögeleri (Konu + 40 Soru).', 'Coğrafya: Türkiye\'de Sanayi, Ticaret, Ulaşım ve Turizm (Konu + 40 Soru).'] },
+            { id: 33, phase: 'p3', title: '33. GÜN: Permütasyon-Kombinasyon & Hak-Ödevler', desc: 'Olasılığa hazırlık ve temel yurttaş hakları.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Matematik: Permütasyon ve Kombinasyon Kavramları (Temel mantık formülleri + 35 Soru).', 'Vatandaşlık: 1982 Anayasası\'nın Temel İlkeleri ve Temel Hak ve Ödevler (Konu + 30 Soru).'] },
+            { id: 34, phase: 'p3', title: '34. GÜN: Olasılık & Çağdaş Dünya Tarihi 1', desc: 'Kesin birer soru getiren olasılık ve çağdaş tarih başlangıcı.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Matematik: Olasılık (Konu + 40 Soru).', 'Tarih: Çağdaş Türk ve Dünya Tarihi - 1 (İki Savaş Arası Dönem, II. Dünya Savaşı).'] },
+            { id: 35, phase: 'p3', title: '35. GÜN: Yazım Kuralları & Kalkınma Projeleri', desc: 'Yazım kuralları kesin soru demektir; bölgesel projelere de dikkat edilmelidir.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Türkçe: Cümle Türleri ve Yazım Kuralları (Yazım kuralları çok önemlidir - Konu + 50 Soru).', 'Coğrafya: Türkiye\'nin Bölgesel Coğrafyası ve Kalkınma Projeleri (GAP, DAP, ZBK vs. - Konu + 30 Soru).'] },
+            { id: 36, phase: 'p3', title: '36. GÜN: Haftalık Değerlendirme & Harita Okumaları', desc: 'Çağdaş tarihi ve coğrafya bölgesel projeleri pekiştirme günü.', tasks: ['Sözel Mantık Rutini: 30 Paragraf + 2 Sözel Mantık Sorusu çöz.', 'Harita Ezberi: Bölgesel projelerin (GAP, DOKAP vb.) hangi illeri kapsadığını boş bir Türkiye dilsiz haritasında işaretle.', 'Çağdaş Tarih Kronolojisi: Dünya savaşları sırasındaki konferansları ve paktları gözden geçir.'] },
+            { id: 37, phase: 'p3', title: '37. GÜN: Noktalama İşaretleri & Anayasa Yasama', desc: 'Noktalama kuralları ve TBMM\'nin çalışma prensipleri.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Türkçe: Noktalama İşaretleri ve Anlatım Bozuklukları (Konu + 40 Soru).', 'Vatandaşlık: 1982 Anayasası - Yasama Organı (TBMM\'nin görevleri, seçimler - Konu + 40 Soru).'] },
+            { id: 38, phase: 'p3', title: '38. GÜN: Sayısal Mantık Giriş & Soğuk Savaş', desc: 'Şekil, grafik yorumlama ve yakın dünya siyasi tarihi.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Matematik: Sayısal Mantık Soruları - Şekil, Tablo ve Grafik Yorumlama (Video çözümlü + 40 Soru).', 'Tarih: Çağdaş Türk ve Dünya Tarihi - 2 (Soğuk Savaş, Yumuşama Dönemi ve Küreselleşen Dünya).'] },
+            { id: 39, phase: 'p3', title: '39. GÜN: Cumhurbaşkanı Yetkileri & Rutin Dışı Problemler', desc: 'Yürütme organı görevleri ve sayısal mantık dizileri.', tasks: ['Paragraf Rutini: 25 Paragraf sorusu.', 'Vatandaşlık: 1982 Anayasası - Yürütme Organı (Cumhurbaşkanı görevleri, Kararnameler - Konu + 40 Soru).', 'Matematik: Sayısal Mantık Soruları - Sayı Dizileri ve Rutin Olmayan Problemler (45 Soru).'] },
+            { id: 40, phase: 'p3', title: '40. GÜN: Sözel Mantık Kurma & Coğrafya Kapanış', desc: 'Sözel mantığın şifresini çözüyor, coğrafyayı kapatıyoruz.', tasks: ['Türkçe: Sözel Mantık Mantığı ve Tablo Kurma Teknikleri (Videolu izle + 10 adet sözel mantık sorusu).', 'Coğrafya: Coğrafya Genel Soru Çözümü (Karma kaynaklardan toplam 80 soru ile Coğrafyayı kapatıyoruz).'] },
+            { id: 41, phase: 'p3', title: '41. GÜN: Anayasa Yargı Organları & Sözel Mantık', desc: 'Yüksek mahkemeler ve sözel mantık soru çözümü.', tasks: ['Vatandaşlık: 1982 Anayasası - Yargı Organı (Anayasa Mahkemesi, HSK, Danıştay, Yargıtay - Konu + 30 Soru).', 'Türkçe: Sözel Mantık Soru Çözüm Kampı (Gelişmiş seviye 15 Sözel Mantık Sorusu).'] },
+            { id: 42, phase: 'p3', title: '42. GÜN: İdare Hukuku & Matematik Tekrarı', desc: 'Vatandaşlığın en çok karıştırılan kısmı ve matematikte karma testler.', tasks: ['Vatandaşlık: İdare Hukuku - 1 (Merkezden Yönetim, Yerinden Yönetim, Kamu Tüzel Kişilikleri - Konu + 35 Soru).', 'Matematik: Matematik Genel Tekrar Testleri (İlk konulardan itibaren karma 60 soru).'] },
+            { id: 43, phase: 'p3', title: '43. GÜN: İdare Hukuku 2 & Tarih Kapanış', desc: 'Devlet Memurluğu Kanunu ve tarihten genel tarama.', tasks: ['Vatandaşlık: İdare Hukuku - 2 (Devlet Memurluğu Kanunu, İdari Sözleşmeler + 40 Soru).', 'Tarih: Tarih Genel Soru Çözümü (İslamiyet öncesinden Çağdaşa karma 100 soru).'] },
+            { id: 44, phase: 'p3', title: '44. GÜN: Güncel Bilgiler & Tüm Dersler Tekrarı', desc: 'Sınavın 6 soruluk güncel kısmına hazırlık ve genel tarama.', tasks: ['Camp Rutini: 30 Paragraf sorusu çöz.', 'Güncel Bilgiler: Son aylarda öne çıkan kültürel, bilimsel ve güncel olayların hızlı özeti ve okunması.', 'Genel Tekrar: Tüm derslerin eldeki özet notlarını hızlıca tarama.'] },
+            { id: 45, phase: 'p3', title: '45. GÜN: Büyük Seviye Belirleme Kampı', desc: 'Gerçek sınav saatinde (10:15) durumumuzu test ediyoruz.', tasks: ['Büyük Deneme: Gerçek sınav saatinde (10:15) tam süre tutarak bir Genel Yetenek - Genel Kültür Denemesi çöz.', 'Derin Röntgen Analizi: Yanlış çıkan tüm konuları tek tek listele ve o listeyi önümüzdeki hafta her gün oku.'] },
+            // Aşama 4 (46-60)
+            { id: 46, phase: 'p4', title: '46. GÜN: Hız ve Kondisyon Kampı - 1', desc: 'Eritilmeyen soru bankası testi bırakmıyoruz.', tasks: ['Sabah 10:15: Türkçe ve Matematik Branş Denemeleri çöz.', 'Öğleden Sonra: Tarih, Coğrafya ve Vatandaşlık genel testlerinden toplam 150 GK Sorusu çöz.', 'Akşam: Güncel bilgiler okuması ve o günkü branş denemelerinin detaylı çözümlerinin öğrenilmesi.'] },
+            { id: 47, phase: 'p4', title: '47. GÜN: Hız ve Kondisyon Kampı - 2', desc: 'Pratikleşme ve süre optimizasyonu.', tasks: ['Sabah 10:15: Türkçe ve Matematik Branş Denemeleri çöz.', 'Öğleden Sonra: Tarih, Coğrafya ve Vatandaşlık genel testlerinden toplam 150 GK Sorusu çöz.', 'Akşam: Hatalı matematik sorularını tekrar çöz.'] },
+            { id: 48, phase: 'p4', title: '48. GÜN: Hız ve Kondisyon Kampı - 3', desc: 'Zaman yönetimi geliştirme.', tasks: ['Sabah 10:15: Türkçe ve Matematik Branş Denemeleri çöz.', 'Öğleden Sonra: Tarih, Coğrafya ve Vatandaşlık genel testlerinden toplam 150 GK Sorusu çöz.', 'Akşam: Tarih ve coğrafya özet notları okuması.'] },
+            { id: 49, phase: 'p4', title: '49. GÜN: Hız ve Kondisyon Kampı - 4', desc: 'Sözel dersler pekiştirme.', tasks: ['Sabah 10:15: Türkçe ve Matematik Branş Denemeleri çöz.', 'Öğleden Sonra: Tarih, Coğrafya ve Vatandaşlık genel testlerinden toplam 150 GK Sorusu çöz.', 'Akşam: Vatandaşlık idare hukuku özetlerini oku.'] },
+            { id: 50, phase: 'p4', title: '50. GÜN: Hız ve Kondisyon Kampı - 5', desc: 'Birinci bölümün son kondisyon günü.', tasks: ['Sabah 10:15: Türkçe ve Matematik Branş Denemeleri çöz.', 'Öğleden Sonra: Tarih, Coğrafya ve Vatandaşlık genel testlerinden toplam 150 GK Sorusu çöz.', 'Akşam: Sözel mantık soru çözümü.'] },
+            { id: 51, phase: 'p4', title: '51. GÜN: GK-GY Karma Hız Kampı - 1', desc: 'Sözel mantık ve problem ağırlıklı çalışma günü.', tasks: ['Sabah 10:15: Tarih, Coğrafya ve Vatandaşlık Branş Denemeleri çöz.', 'Öğleden Sonra: Matematik Problem ve Sayısal Mantık odaklı 50 soru çöz.', 'Öğleden Sonra: Türkçe Sözel Mantık ve Paragraf odaklı 40 soru çöz.', 'Akşam: Yanlış defteri kontrolü.'] },
+            { id: 52, phase: 'p4', title: '52. GÜN: GK-GY Karma Hız Kampı - 2', desc: 'Zor soru tiplerini tarıyoruz.', tasks: ['Sabah 10:15: Tarih, Coğrafya ve Vatandaşlık Branş Denemeleri çöz.', 'Öğleden Sonra: Matematik Problem ve Sayısal Mantık odaklı 50 soru çöz.', 'Öğleden Sonra: Türkçe Sözel Mantık ve Paragraf odaklı 40 soru çöz.', 'Akşam: Yanlış defterdeki en çok tekrar eden konuları çalış.'] },
+            { id: 53, phase: 'p4', title: '53. GÜN: GK-GY Karma Hız Kampı - 3', desc: 'Genel kültür ezber cila.', tasks: ['Sabah 10:15: Tarih, Coğrafya ve Vatandaşlık Branş Denemeleri çöz.', 'Öğleden Sonra: Matematik Problem ve Sayısal Mantık odaklı 50 soru çöz.', 'Öğleden Sonra: Türkçe Sözel Mantık ve Paragraf odaklı 40 soru çöz.', 'Akşam: Türkiye dilsiz haritasında maden ve sanayi taraması yap.'] },
+            { id: 54, phase: 'p4', title: '54. GÜN: GK-GY Karma Hız Kampı - 4', desc: 'Hızlı süre testi.', tasks: ['Sabah 10:15: Tarih, Coğrafya ve Vatandaşlık Branş Denemeleri çöz.', 'Öğleden Sonra: Matematik Problem ve Sayısal Mantık odaklı 50 soru çöz.', 'Öğleden Sonra: Türkçe Sözel Mantık ve Paragraf odaklı 40 soru çöz.', 'Akşam: Türk anayasa tarihi maddelerini tekrar et.'] },
+            { id: 55, phase: 'p4', title: '55. GÜN: GK-GY Karma Hız Kampı - 5', desc: 'Genel deneme öncesi son rötuş.', tasks: ['Sabah 10:15: Tarih, Coğrafya ve Vatandaşlık Branş Denemeleri çöz.', 'Öğleden Sonra: Matematik Problem ve Sayısal Mantık odaklı 50 soru çöz.', 'Öğleden Sonra: Türkçe Sözel Mantık ve Paragraf odaklı 40 soru çöz.', 'Akşam: Yanlış defterini baştan sona oku.'] },
+            { id: 56, phase: 'p4', title: '56. GÜN: Son Genel Tekrar & Deneme Hazırlığı - 1', desc: 'Tüm konu yüklerini kalıcı hafızaya alma günleri.', tasks: ['Türkçe ve Matematik tüm formül ve kuralları gözden geçir.', 'Tarih İslamiyet Öncesi ve Türk-İslam genel notlarını oku.', 'Günde 2 adet tüm dersleri kapsayan Karma Soru Testleri çöz.'] },
+            { id: 57, phase: 'p4', title: '57. GÜN: Son Genel Tekrar & Deneme Hazırlığı - 2', desc: 'Coğrafya fiziki ve beşeri tekrarı.', tasks: ['Coğrafya dağlar, göller, topraklar ve nüfus verilerini haritadan tekrar et.', 'Tarih Osmanlı Kültür Medeniyet ve Islahatlar özetlerini oku.', 'Karma Soru Testleri çöz.'] },
+            { id: 58, phase: 'p4', title: '58. GÜN: Son Genel Tekrar & Deneme Hazırlığı - 3', desc: 'İnkılap tarihi ağırlıklı gün.', tasks: ['İnkılap Tarihi kongreler, cepheler ve Lozan maddelerini son kez baştan sona oku.', 'Vatandaşlık Yasama ve Yürütme anayasal kuralları tekrar oku.', 'Karma Soru Testleri çöz.'] },
+            { id: 59, phase: 'p4', title: '59. GÜN: Son Genel Tekrar & Deneme Hazırlığı - 4', desc: 'Çağdaş tarih ve idare hukuku tekrarı.', tasks: ['Çağdaş Türk ve Dünya Tarihi gelişmelerini gözden geçir.', 'Vatandaşlık Yargı ve İdare Hukuku son notlarını oku.', 'Karma Soru Testleri çöz.'] },
+            { id: 60, phase: 'p4', title: '60. GÜN: Büyük Konu Kapanışı ve Dinlenme', desc: 'Konu defterlerine veda edip deneme moduna geçiş töreni.', tasks: [] },
+            // Deneme Kampı (61-74)
+            { id: 61, phase: 'camp', title: 'DENEME KAMPI - 1. GÜN', desc: 'Sınav provası serüveni başlıyor kanka. Kendinize güvenin.', tasks: ['Saat 10:15: Gerçek sınav kurallarıyla 1 adet tam GK-GY Denemesi çöz.', 'Öğleden Sonra: Deneme analizini yap, yanlış yaptığın 2 konuyu açıp 10 sayfalık hızlı tekrar oku.'] },
+            { id: 62, phase: 'camp', title: 'DENEME KAMPI - 2. GÜN', desc: 'Provaya devam, süre kontrolü yap.', tasks: ['Saat 10:15: Gerçek sınav kurallarıyla 1 adet tam GK-GY Denemesi çöz.', 'Öğleden Sonra: Deneme analizini yap, yanlış yaptığın konuların özetlerini gözden geçir.'] },
+            { id: 63, phase: 'camp', title: 'DENEME KAMPI - 3. GÜN', desc: 'Matematik süresini iyileştir.', tasks: ['Saat 10:15: Gerçek sınav kurallarıyla 1 adet tam GK-GY Denemesi çöz.', 'Öğleden Sonra: Yanlış yaptığın soruların çözümlerini hocalarına veya video çözümlerden öğren.'] },
+            { id: 64, phase: 'camp', title: 'DENEME KAMPI - 4. GÜN', desc: 'Sözel netleri tırmandır.', tasks: ['Saat 10:15: Gerçek sınav kurallarıyla 1 adet tam GK-GY Denemesi çöz.', 'Öğleden Sonra: Tarih ve coğrafya yanlışlarından pratik notlar çıkar.'] },
+            { id: 65, phase: 'camp', title: 'DENEME KAMPI - 5. GÜN', desc: 'Kondisyonu koru.', tasks: ['Saat 10:15: Gerçek sınav kurallarıyla 1 adet tam GK-GY Denemesi çöz.', 'Öğleden Sonra: Yanlış analizini tamamla, akşam güncel bilgiler bültenini oku.'] },
+            { id: 66, phase: 'camp', title: 'DENEME KAMPI - 6. GÜN', desc: 'Zor deneme provası.', tasks: ['Saat 10:15: Gerçek sınav kurallarıyla 1 adet tam GK-GY Denemesi çöz.', 'Öğleden Sonra: Analiz ve eksik kapatma çalışması yap.'] },
+            { id: 67, phase: 'camp', title: 'DENEME KAMPI - 7. GÜN', desc: 'İlk haftanın deneme röntgeni.', tasks: ['Bugün deneme çözme. Son 6 denemenin analizlerini karşılaştır, ortak yanlış çıkan 3 konuyu tespit et ve o konulara ait test çöz.'] },
+            { id: 68, phase: 'camp', title: 'DENEME KAMPI - 8. GÜN', desc: 'İkinci haftaya dinamik başlangıç.', tasks: ['Saat 10:15: Gerçek sınav kurallarıyla 1 adet tam GK-GY Denemesi çöz.', 'Öğleden Sonra: Detaylı deneme analizi ve röntgen çalışması.'] },
+            { id: 69, phase: 'camp', title: 'DENEME KAMPI - 9. GÜN', desc: 'Sınav anı sakinlik egzersizi.', tasks: ['Saat 10:15: Gerçek sınav kurallarıyla 1 adet tam GK-GY Denemesi çöz.', 'Öğleden Sonra: Yanlış konuların hızlı özet okumaları.'] },
+            { id: 70, phase: 'camp', title: 'DENEME KAMPI - 10. GÜN', desc: 'Optik kodlama hızlandırma.', tasks: ['Saat 10:15: Gerçek sınav kurallarıyla 1 adet tam GK-GY Denemesi çöz.', 'Öğleden Sonra: Analiz ve akşam hafif yürüyüş/dinlenme.'] },
+            { id: 71, phase: 'camp', title: 'DENEME KAMPI - 11. GÜN', desc: 'Sona yaklaşıyoruz.', tasks: ['Saat 10:15: Gerçek sınav kurallarıyla 1 adet tam GK-GY Denemesi çöz.', 'Öğleden Sonra: Son deneme analizleri ve eksik kapatma.'] },
+            { id: 72, phase: 'camp', title: 'DENEME KAMPI - 12. GÜN', desc: 'Son zorlayıcı prova.', tasks: ['Saat 10:15: Gerçek sınav kurallarıyla 1 adet tam GK-GY Denemesi çöz.', 'Öğleden Sonra: Analizini tamamla ve tüm defterleri kaldır.'] },
+            { id: 73, phase: 'camp', title: 'DENEME KAMPI - 13. GÜN', desc: 'Sınav öncesi son hafif cila.', tasks: [] },
+            { id: 74, phase: 'camp', title: 'BÜYÜK SINAV GÜNÜ (6 EYLÜL 2026)', desc: 'Başarılar! Bu sizin günün Melih ve Buse.', tasks: [] }
+        ];
+
+        // ─── Core State ───────────────────────────────────────────────────────────
+        let currentUser   = 'melih';
+        let currentFilter = 'all';
+        let isOnline      = false;
+        let db            = null;
+        let customAppId   = 'kpss-default-Karargah';
+        let quizMode      = 'exam'; // 'exam' | 'learn'
+        let netChartInstance = null;
+
+        const defaultFirebaseConfig = {
+            apiKey: "AIzaSyCMWXzbtUVeI5X0SZHrUAYiR9PJROjla-Y",
+            authDomain: "kpss-veri-tabani.firebaseapp.com",
+            projectId: "kpss-veri-tabani",
+            storageBucket: "kpss-veri-tabani.firebasestorage.app",
+            messagingSenderId: "433128186857",
+            appId: "1:433128186857:web:3d3a25afd0aef6c37ea178",
+            measurementId: "G-QTYYCB8M4M"
+        };
+
+        let localState = {
+            melih: { checkedTasks: {}, notes: "", scores: { tur: 25, mat: 18, tar: 20, cog: 12, vat: 10 }, netHistory: [], quizHistory: [], wrongNotes: [], dailyGoal: 100, dailySolved: 0 },
+            buse:  { checkedTasks: {}, notes: "", scores: { tur: 24, mat: 15, tar: 22, cog: 14, vat: 11 }, netHistory: [], quizHistory: [], wrongNotes: [], dailyGoal: 100, dailySolved: 0 }
+        };
+
+        // ─── Quiz State ───────────────────────────────────────────────────────────
+        let currentQuizData    = [];
+        let activeQuizAnswers  = [];
+        let activeQuizIndex    = 0;
+        let activeDayForQuiz   = null;
+
+        // ─── App Init ─────────────────────────────────────────────────────────────
+        function initAppEngine() {
+            const savedFirebaseConfig = localStorage.getItem('kpss_firebase_config_v3') || "";
+            const savedRoomId         = localStorage.getItem('kpss_room_id') || "";
+            
+            document.getElementById('input-room-id').value  = savedRoomId || "melih-buse-2026";
+            document.getElementById('input-groq-key').value = '';
+
+            if (savedRoomId.trim() !== "") customAppId = savedRoomId.trim();
+
+            let configObj = defaultFirebaseConfig;
+            if (savedFirebaseConfig.trim() !== "") {
+                try {
+                    configObj = JSON.parse(savedFirebaseConfig);
+                    document.getElementById('input-firebase-config').value = JSON.stringify(configObj, null, 2);
+                } catch (e) {
+                    document.getElementById('input-firebase-config').value = JSON.stringify(defaultFirebaseConfig, null, 2);
+                }
+            } else {
+                document.getElementById('input-firebase-config').value = JSON.stringify(defaultFirebaseConfig, null, 2);
+            }
+
+            try {
+                if (firebase.apps.length === 0) firebase.initializeApp(configObj);
+                db = firebase.firestore();
+                firebase.auth().signInAnonymously().then(() => {
+                    isOnline = true;
+                    document.getElementById('sync-dot').className    = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
+                    document.getElementById('sync-status').innerText = "Bağlantı Aktif: Canlı Eşitleme Yapılıyor 🟢";
+                    startRealtimeSync();
+                }).catch(() => setupLocalFallback());
+            } catch (e) {
+                setupLocalFallback();
+            }
+        }
+
+        function setupLocalFallback() {
+            isOnline = false;
+            document.getElementById('sync-dot').className    = "w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse";
+            document.getElementById('sync-status').innerText = "Yerel Kayıt Modu (Bağlantı Bekliyor...) 🟡";
+            const offlineState = localStorage.getItem('kpss_mb_offline_data_v3');
+            if (offlineState) {
+                try {
+                    const parsed = JSON.parse(offlineState);
+                    // Eski kayıtlarda eksik alanları doldur
+                    ['melih','buse'].forEach(u => {
+                        if (!parsed[u]) return;
+                        if (!parsed[u].netHistory)  parsed[u].netHistory  = [];
+                        if (!parsed[u].quizHistory) parsed[u].quizHistory = [];
+                        if (!parsed[u].wrongNotes)  parsed[u].wrongNotes  = [];
+                        if (!parsed[u].dailyGoal)   parsed[u].dailyGoal   = 100;
+                        if (!parsed[u].dailySolved)  parsed[u].dailySolved  = 0;
+                    });
+                    localState = parsed;
+                } catch(e) { /* localState default kalır */ }
+            }
+            updateUIForState();
+        }
+
+        function startRealtimeSync() {
+            if (!isOnline || !db) return;
+            const melihRef = db.doc(`artifacts/${customAppId}/public/data/userProgress/melih`);
+            const buseRef  = db.doc(`artifacts/${customAppId}/public/data/userProgress/buse`);
+
+            melihRef.onSnapshot(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    // Eksik alanları doldur
+                    if (!data.netHistory)  data.netHistory  = [];
+                    if (!data.quizHistory) data.quizHistory = [];
+                    if (!data.wrongNotes)  data.wrongNotes  = [];
+                    if (!data.dailyGoal)   data.dailyGoal   = 100;
+                    if (!data.dailySolved)  data.dailySolved  = 0;
+                    localState.melih = data;
+                } else {
+                    melihRef.set(localState.melih);
+                }
+                updateUIForState();
+            }, err => { console.error("Melih sync error:", err); showToast("Melih veritabanı okuma hatası!"); });
+
+            buseRef.onSnapshot(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    if (!data.netHistory)  data.netHistory  = [];
+                    if (!data.quizHistory) data.quizHistory = [];
+                    if (!data.wrongNotes)  data.wrongNotes  = [];
+                    if (!data.dailyGoal)   data.dailyGoal   = 100;
+                    if (!data.dailySolved)  data.dailySolved  = 0;
+                    localState.buse = data;
+                } else {
+                    buseRef.set(localState.buse);
+                }
+                updateUIForState();
+            }, err => { console.error("Buse sync error:", err); showToast("Buse veritabanı okuma hatası!"); });
+        }
+
+        let debounceTimer = null;
+        function saveProgress() {
+            if (isOnline && db) {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    const userRef = db.doc(`artifacts/${customAppId}/public/data/userProgress/${currentUser}`);
+                    userRef.set(localState[currentUser])
+                        .then(() => showToast("Bulut senkronizasyonu tamamlandı!"))
+                        .catch(() => {
+                            localStorage.setItem('kpss_mb_offline_data_v3', JSON.stringify(localState));
+                            showToast("Bağlantı hatası: Yerel kaydedildi!");
+                        });
+                }, 400);
+            } else {
+                localStorage.setItem('kpss_mb_offline_data_v3', JSON.stringify(localState));
+                updateUIForState();
+                showToast("Yerel hafızaya kaydedildi!");
+            }
+        }
+
+        // ─── Ekran Geçişi ─────────────────────────────────────────────────────────
+        window.switchScreen = function(screenName) {
+            // Tüm ekranları gizle
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            // Seçili ekranı göster
+            const target = document.getElementById('screen-' + screenName);
+            if (target) target.classList.add('active');
+            // Nav butonlarını güncelle
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            const navBtn = document.getElementById('nav-' + screenName);
+            if (navBtn) navBtn.classList.add('active');
+            // İstatistik ekranına geçince grafiği yenile
+            if (screenName === 'stats') {
+                renderNetChart();
+                renderSubjectAnalysis();
+                renderQuizHistory();
+            }
+            // Yanlış defter ekranına geçince listeyi yenile
+            if (screenName === 'wrong') {
+                renderWrongNotes('all');
+            }
+        };
+
+        // ─── User Switch ──────────────────────────────────────────────────────────
+        window.switchUser = function(user) {
+            currentUser = user;
+            const melihBtn = document.getElementById('btn-user-melih');
+            const buseBtn  = document.getElementById('btn-user-buse');
+            if (user === 'melih') {
+                melihBtn.className = "flex flex-col sm:flex-row items-center justify-between p-3.5 rounded-2xl border-2 border-indigo-600 bg-indigo-50/40 dark:bg-indigo-950/20 text-left transition-all";
+                buseBtn.className  = "flex flex-col sm:flex-row items-center justify-between p-3.5 rounded-2xl border-2 border-transparent hover:border-slate-200 dark:hover:border-slate-800 bg-slate-50 dark:bg-slate-950/40 text-left transition-all";
+            } else {
+                buseBtn.className  = "flex flex-col sm:flex-row items-center justify-between p-3.5 rounded-2xl border-2 border-rose-500 bg-rose-50/40 dark:bg-rose-950/20 text-left transition-all";
+                melihBtn.className = "flex flex-col sm:flex-row items-center justify-between p-3.5 rounded-2xl border-2 border-transparent hover:border-slate-200 dark:hover:border-slate-800 bg-slate-50 dark:bg-slate-950/40 text-left transition-all";
+            }
+            updateUIForState();
+        };
+
+        // ─── UI Rendering ─────────────────────────────────────────────────────────
+        function updateUIForState() {
+            const state = localState[currentUser];
+            document.getElementById('net-tur').value = state.scores.tur || 0;
+            document.getElementById('net-mat').value = state.scores.mat || 0;
+            document.getElementById('net-tar').value = state.scores.tar || 0;
+            document.getElementById('net-cog').value = state.scores.cog || 0;
+            document.getElementById('net-vat').value = state.scores.vat || 0;
+            calculateEstimator(false);
+
+            // Günlük hedef güncelle
+            updateDailyGoalUI();
+
+            // Genel istatistik kartlarını güncelle
+            updateGlobalStats();
+
+            const badge      = document.getElementById('hero-badge');
+            const title      = document.getElementById('hero-title');
+            const desc       = document.getElementById('hero-desc');
+            const careerCard = document.getElementById('career-card');
+
+            if (currentUser === 'melih') {
+                badge.className = "inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-950/40 text-indigo-400";
+                badge.innerText = "💻 Melih'in Odası";
+                title.innerText = "Melih'in KPSS Rehberi";
+                desc.innerText  = "Yönetim Bilişim Sistemleri mezunu Melih için 4431 nitelik koduyla atanmayı sağlayacak en stratejik program. Konu analizlerini bitir ve yazılım/sistem kadrolarını garantile kanka!";
+                careerCard.innerHTML = `
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="p-2 bg-indigo-500/10 text-indigo-400 rounded-lg">💼</span>
+                        <h3 class="font-extrabold text-[10px] text-slate-900 dark:text-slate-200 uppercase tracking-wider">Atanabileceğin Unvanlar (YBS)</h3>
+                    </div>
+                    <ul class="space-y-2 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                        <li>🎯 <strong class="text-slate-800 dark:text-slate-200">Çözümleyici (Analist):</strong> Kamu kurumlarındaki en yüksek gelir getiren ve en prestijli YBS bilişim pozisyonudur.</li>
+                        <li>🎯 <strong class="text-slate-800 dark:text-slate-200">Programcı:</strong> Çeşitli bakanlıkların yazılım ve veritabanı idaresinde geliştirici unvanı.</li>
+                        <li>🎯 <strong class="text-slate-800 dark:text-slate-200">Bilgisayar İşletmeni / VHKİ:</strong> Bilgi işlem dairelerinde kararlı ve konforlu memurluk kadroları.</li>
+                    </ul>`;
+            } else {
+                badge.className = "inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full border border-rose-500/30 bg-rose-950/40 text-rose-400";
+                badge.innerText = "🎨 Tasarım ve Görsel İletişim Masası";
+                title.innerText = "Buse'nin KPSS Rehberi";
+                desc.innerText  = "Görsel İletişim Tasarımı mezunu Buse için Kültür Bakanlığı, TRT ve üniversitelerin kreatif kadrolarında yer almasını sağlayacak özel tasarım programı. KPSS'yi estetikle fethedeceğiz sevgilim!";
+                careerCard.innerHTML = `
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="p-2 bg-rose-500/10 text-rose-400 rounded-lg">🖼️</span>
+                        <h3 class="font-extrabold text-[10px] text-slate-900 dark:text-slate-200 uppercase tracking-wider">Atanabileceğin Unvanlar (GİT)</h3>
+                    </div>
+                    <ul class="space-y-2 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                        <li>🎨 <strong class="text-slate-800 dark:text-slate-200">Grafiker / Tasarımcı:</strong> TRT, Kültür ve Turizm Bakanlığı ile devlet üniversitelerinin tanıtım, yayın ve medya birimleri.</li>
+                        <li>🎨 <strong class="text-slate-800 dark:text-slate-200">Medya ve İletişim Sorumlusu:</strong> Kamu dairelerinin kurumsal iletişim ve basın halkla ilişkiler kreatif müdürlükleri.</li>
+                        <li>🎨 <strong class="text-slate-800 dark:text-slate-200">Kreatif Analist:</strong> Dijital yayıncılık yapan kamu kurumlarında kullanıcı deneyimi ve arayüz yöneticiliği.</li>
+                    </ul>`;
+            }
+            renderSchedule();
+        }
+
+        // ─── Günlük Hedef ─────────────────────────────────────────────────────────
+        window.setDailyGoal = function(goal) {
+            localState[currentUser].dailyGoal = goal;
+            saveProgress();
+            updateDailyGoalUI();
+            showToast(`Günlük hedef ${goal} soru olarak ayarlandı!`);
+        };
+
+        function updateDailyGoalUI() {
+            const state  = localState[currentUser];
+            const goal   = state.dailyGoal   || 100;
+            const solved = state.dailySolved  || 0;
+            const pct    = Math.min(100, Math.round((solved / goal) * 100));
+            document.getElementById('daily-goal-fill').style.width  = pct + '%';
+            document.getElementById('daily-goal-done').innerText    = `${solved} soru çözüldü`;
+            document.getElementById('daily-goal-num').innerText     = goal;
+        }
+
+        // ─── Genel İstatistik Kartları ────────────────────────────────────────────
+        function updateGlobalStats() {
+            const state = localState[currentUser];
+            const history = state.quizHistory || [];
+            let totalQ = 0, totalC = 0, totalW = 0;
+            history.forEach(h => {
+                totalQ += h.total || 0;
+                totalC += h.correct || 0;
+                totalW += (h.total - h.correct) || 0;
+            });
+            const rate = totalQ > 0 ? Math.round((totalC / totalQ) * 100) : 0;
+            document.getElementById('stat-total-q').innerText      = totalQ;
+            document.getElementById('stat-total-c').innerText      = totalC;
+            document.getElementById('stat-total-w').innerText      = totalW;
+            document.getElementById('stat-success-rate').innerText = `%${rate}`;
+        }
+
+        // ─── Score Estimator ──────────────────────────────────────────────────────
+        window.calculateEstimator = function(triggerSave) {
+            const tur = parseFloat(document.getElementById('net-tur').value) || 0;
+            const mat = parseFloat(document.getElementById('net-mat').value) || 0;
+            const tar = parseFloat(document.getElementById('net-tar').value) || 0;
+            const cog = parseFloat(document.getElementById('net-cog').value) || 0;
+            const vat = parseFloat(document.getElementById('net-vat').value) || 0;
+
+            document.getElementById('tur-val').innerText = tur;
+            document.getElementById('mat-val').innerText = mat;
+            document.getElementById('tar-val').innerText = tar;
+            document.getElementById('cog-val').innerText = cog;
+            document.getElementById('vat-val').innerText = vat;
+
+            const totalNet = tur + mat + tar + cog + vat;
+            document.getElementById('total-net-display').innerText = `${totalNet} Net`;
+
+            let score = 38.29 + (tur * 0.52) + (mat * 0.48) + (tar * 0.55) + (cog * 0.52) + (vat * 0.50);
+            if (score > 100) score = 100;
+            if (totalNet === 0) score = 0;
+            document.getElementById('estimated-score').innerText = `${score.toFixed(2)} Puan`;
+
+            if (triggerSave) {
+                localState[currentUser].scores = { tur, mat, tar, cog, vat };
+                saveProgress();
+            }
+        };
+
+        // ─── Schedule Render ──────────────────────────────────────────────────────
+        function renderSchedule() {
+            const container = document.getElementById('schedule-container');
+            container.innerHTML = '';
+
+            scheduleData.filter(day => currentFilter === 'all' || day.phase === currentFilter).forEach(day => {
+                const dayCard = document.createElement('div');
+                const themeBorder = currentUser === 'melih' ? 'hover:border-indigo-500/30' : 'hover:border-rose-500/30';
+                dayCard.className = `day-card glass-card rounded-3xl p-5 border border-slate-200 dark:border-slate-800/80 shadow-md transition-all duration-300 ${themeBorder}`;
+
+                const phaseLabel = { p1: '1. Aşama', p2: '2. Aşama', p3: '3. Aşama', p4: '4. Aşama', camp: 'Deneme Kampı' };
+                const phaseColor = { p1: 'bg-indigo-500/10 text-indigo-400', p2: 'bg-cyan-500/10 text-cyan-400', p3: 'bg-amber-500/10 text-amber-400', p4: 'bg-pink-500/10 text-pink-400', camp: 'bg-rose-500/10 text-rose-400' };
+
+                let tasksHTML = '<div class="day-tasks-container space-y-2.5">';
+                day.tasks.forEach((task, index) => {
+                    const taskId    = `${day.id}_${index}`;
+                    const isChecked = localState[currentUser].checkedTasks[taskId] ? 'checked' : '';
+                    tasksHTML += `
+                        <label class="flex items-start gap-3 p-3 rounded-2xl bg-slate-100/40 dark:bg-slate-950/40 hover:bg-slate-200/50 dark:hover:bg-slate-900/60 transition cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-slate-800/80">
+                            <input type="checkbox" onchange="toggleTask('${taskId}')" ${isChecked} class="interactive-checkbox no-print mt-0.5 w-5 h-5 text-indigo-600 bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 rounded-lg focus:ring-indigo-500 transition-all">
+                            <span class="text-xs md:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-semibold ${isChecked ? 'line-through text-slate-400 dark:text-slate-600' : ''}">${task}</span>
+                        </label>`;
+                });
+                tasksHTML += '</div>';
+
+                const quizBtn = day.id <= 60 ? `
+                    <button onclick="startAiQuiz(${day.id})" class="mt-4 w-full flex items-center justify-center gap-2 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white py-3 rounded-2xl text-xs font-black shadow-lg shadow-indigo-500/15 transition-all transform hover:scale-[1.01] active:scale-95">
+                        <span>✨</span> Groq AI Sınavını Başlat (30 Soru)
+                    </button>` : '';
+
+                dayCard.innerHTML = `
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                        <div class="flex items-center gap-2.5">
+                            <span class="text-xs font-black text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 px-3 py-1.5 rounded-xl border border-indigo-500/20 font-mono">${day.id <= 60 ? 'GÜN ' + day.id : 'KAMP'}</span>
+                            <h3 class="font-extrabold text-slate-900 dark:text-white text-sm md:text-base">${day.title}</h3>
+                        </div>
+                        <span class="no-print text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider ${phaseColor[day.phase]}">${phaseLabel[day.phase]}</span>
+                    </div>
+                    <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed italic">${day.desc}</p>
+                    ${tasksHTML}${quizBtn}`;
+
+                container.appendChild(dayCard);
+            });
+            calculateProgress();
+        }
+
+        window.toggleTask = function(taskId) {
+            if (localState[currentUser].checkedTasks[taskId]) {
+                delete localState[currentUser].checkedTasks[taskId];
+            } else {
+                localState[currentUser].checkedTasks[taskId] = true;
+                // Günlük çözülen soru sayısını artır
+                localState[currentUser].dailySolved = (localState[currentUser].dailySolved || 0) + 1;
+            }
+            saveProgress();
+            renderSchedule();
+            updateDailyGoalUI();
+        };
+
+        function calculateProgress() {
+            const totalTasks = scheduleData.reduce((sum, d) => sum + d.tasks.length, 0);
+
+            const melihChecked  = Object.keys(localState.melih.checkedTasks).length;
+            const melihPercent  = totalTasks > 0 ? Math.round((melihChecked / totalTasks) * 100) : 0;
+            document.getElementById('melih-progress-badge').innerText = `%${melihPercent}`;
+
+            const buseChecked   = Object.keys(localState.buse.checkedTasks).length;
+            const busePercent   = totalTasks > 0 ? Math.round((buseChecked / totalTasks) * 100) : 0;
+            document.getElementById('buse-progress-badge').innerText = `%${busePercent}`;
+
+            const activePercent = currentUser === 'melih' ? melihPercent : busePercent;
+            document.getElementById('overall-percentage').innerText = `%${activePercent}`;
+            document.getElementById('overall-bar').style.width      = `${activePercent}%`;
+        }
+
+        // ─── Faz Filtresi ─────────────────────────────────────────────────────────
+        window.filterPhase = function(phase) {
+            currentFilter = phase;
+            // Aktif butonu güncelle
+            document.querySelectorAll('.phase-filter-btn').forEach(b => b.classList.remove('active-filter'));
+            const activeBtn = document.getElementById('filter-' + phase);
+            if (activeBtn) activeBtn.classList.add('active-filter');
+            renderSchedule();
+        };
+
+        // ─── Settings Modal ───────────────────────────────────────────────────────
+        window.openSettingsModal = function() {
+            const modal = document.getElementById('settings-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.remove('scale-95');
+        };
+        window.closeSettingsModal = function() {
+            const modal = document.getElementById('settings-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.add('scale-95');
+        };
+        window.saveSettings = function() {
+            const firebaseConfigText = document.getElementById('input-firebase-config').value.trim();
+            const roomId             = document.getElementById('input-room-id').value.trim();
+            const groqKey            = document.getElementById('input-groq-key').value.trim();
+            localStorage.setItem('kpss_firebase_config_v3', firebaseConfigText);
+            localStorage.setItem('kpss_room_id', roomId);
+            if (groqKey) localStorage.setItem('kpss_groq_key', groqKey);
+            showToast("Ayarlar kaydedildi! Yeniden başlatılıyor...");
+            closeSettingsModal();
+            setTimeout(() => window.location.reload(), 1000);
+        };
+
+        // ─── Net Girişi Modal ─────────────────────────────────────────────────────
+        window.openNetEntryModal = function() {
+            const modal = document.getElementById('net-entry-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.remove('scale-95');
+            document.getElementById('net-entry-value').value = '';
+            document.getElementById('net-entry-note').value  = '';
+        };
+        window.closeNetEntryModal = function() {
+            const modal = document.getElementById('net-entry-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.add('scale-95');
+        };
+        window.saveNetEntry = function() {
+            const val  = parseFloat(document.getElementById('net-entry-value').value);
+            const note = document.getElementById('net-entry-note').value.trim();
+            if (isNaN(val) || val < 0) { showToast("Geçerli bir net değeri girin!"); return; }
+            const entry = { date: new Date().toLocaleDateString('tr-TR'), value: val, note: note };
+            if (!localState[currentUser].netHistory) localState[currentUser].netHistory = [];
+            localState[currentUser].netHistory.push(entry);
+            saveProgress();
+            closeNetEntryModal();
+            renderNetChart();
+            showToast(`${val} net kaydedildi!`);
+        };
+
+        // ─── Net Grafiği ──────────────────────────────────────────────────────────
+        function renderNetChart() {
+            const canvas = document.getElementById('net-chart');
+            if (!canvas) return;
+            const history = (localState[currentUser].netHistory || []).slice(-10);
+            const labels  = history.map(h => h.date);
+            const data    = history.map(h => h.value);
+
+            if (netChartInstance) { netChartInstance.destroy(); netChartInstance = null; }
+
+            const isDark = document.documentElement.classList.contains('dark');
+            netChartInstance = new Chart(canvas, {
+                type: 'line',
+                data: {
+                    labels: labels.length ? labels : ['Henüz veri yok'],
+                    datasets: [{
+                        label: 'Günlük Net',
+                        data: data.length ? data : [0],
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99,102,241,0.08)',
+                        borderWidth: 2.5,
+                        pointBackgroundColor: '#6366f1',
+                        pointRadius: 5,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 120,
+                            grid: { color: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' },
+                            ticks: { color: isDark ? '#94a3b8' : '#64748b', font: { size: 10 } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: isDark ? '#94a3b8' : '#64748b', font: { size: 9 }, maxRotation: 30 }
+                        }
+                    }
+                }
+            });
+        }
+
+        // ─── Konu Analizi ─────────────────────────────────────────────────────────
+        function renderSubjectAnalysis() {
+            const container = document.getElementById('subject-analysis-container');
+            const history   = (localState[currentUser].quizHistory || []);
+            if (!history.length) {
+                container.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">Sınav tamamladıktan sonra konu analizin burada görünecek.</p>';
+                return;
+            }
+
+            // Konu bazlı toplama
+            const subjectStats = {};
+            history.forEach(h => {
+                if (!h.subjects) return;
+                Object.entries(h.subjects).forEach(([subj, stat]) => {
+                    if (!subjectStats[subj]) subjectStats[subj] = { correct: 0, total: 0 };
+                    subjectStats[subj].correct += stat.correct || 0;
+                    subjectStats[subj].total   += stat.total   || 0;
+                });
+            });
+
+            const colors = { 'Türkçe': '#6366f1', 'Matematik': '#10b981', 'Tarih': '#f43f5e', 'Coğrafya': '#14b8a6', 'Vatandaşlık': '#f59e0b' };
+            let html = '';
+            let weakSubj = null, weakRate = 100;
+
+            Object.entries(subjectStats).forEach(([subj, stat]) => {
+                const rate = stat.total > 0 ? Math.round((stat.correct / stat.total) * 100) : 0;
+                const color = colors[subj] || '#6366f1';
+                if (rate < weakRate) { weakRate = rate; weakSubj = subj; }
+                html += `
+                    <div class="subject-bar-wrap">
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span class="text-slate-700 dark:text-slate-300">${subj}</span>
+                            <span style="color:${color}" class="font-extrabold">%${rate} (${stat.correct}/${stat.total})</span>
+                        </div>
+                        <div class="subject-bar-bg">
+                            <div style="height:100%;border-radius:999px;background:${color};width:${rate}%;transition:width 0.6s ease;"></div>
+                        </div>
+                    </div>`;
+            });
+
+            container.innerHTML = html;
+
+            if (weakSubj) {
+                const banner = document.getElementById('weak-subject-banner');
+                banner.classList.remove('hidden');
+                document.getElementById('weak-subject-text').innerText = `⚠️ En Zayıf Alan: ${weakSubj} (%${weakRate}) — Bu konuya daha fazla zaman ayır!`;
+            }
+        }
+
+        // ─── Sınav Geçmişi ────────────────────────────────────────────────────────
+        function renderQuizHistory() {
+            const container = document.getElementById('quiz-history-container');
+            const history   = (localState[currentUser].quizHistory || []).slice().reverse();
+            if (!history.length) {
+                container.innerHTML = '<p class="text-xs text-slate-400 text-center py-4">Henüz sınav tamamlanmadı.</p>';
+                return;
+            }
+            container.innerHTML = history.map((h, i) => `
+                <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 mb-2">
+                    <div>
+                        <p class="text-xs font-bold text-slate-800 dark:text-slate-200">${h.dayTitle || 'Sınav ' + (history.length - i)}</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">${h.date || ''}</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-sm font-black ${h.correct / h.total >= 0.6 ? 'text-emerald-500' : 'text-rose-500'}">${h.correct}/${h.total}</span>
+                        <p class="text-[10px] text-slate-400">%${Math.round((h.correct/h.total)*100)}</p>
+                    </div>
+                </div>`).join('');
+        }
+
+        // ─── Yanlış Defter ────────────────────────────────────────────────────────
+        window.filterWrong = function(subject) {
+            // Filtre butonlarını güncelle
+            document.querySelectorAll('.wrong-filter-btn').forEach(b => b.classList.remove('active'));
+            const clicked = [...document.querySelectorAll('.wrong-filter-btn')].find(b => b.onclick && b.onclick.toString().includes(`'${subject}'`));
+            if (clicked) clicked.classList.add('active');
+            renderWrongNotes(subject);
+        };
+
+        function renderWrongNotes(subject) {
+            const container = document.getElementById('wrong-notes-container');
+            let notes = localState[currentUser].wrongNotes || [];
+            if (subject !== 'all') notes = notes.filter(n => n.subject === subject);
+            if (!notes.length) {
+                container.innerHTML = `
+                    <div class="text-center py-12">
+                        <span class="text-4xl block mb-3">🎉</span>
+                        <p class="text-sm font-bold text-slate-400">Henüz yanlış soru yok!</p>
+                        <p class="text-xs text-slate-400 mt-1">Sınavlarda yanlış yaptığın sorular burada toplanacak.</p>
+                    </div>`;
+                return;
+            }
+            container.innerHTML = notes.map((n, i) => `
+                <div class="wrong-card">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-[10px] font-black text-rose-500 uppercase tracking-wider">${n.subject || 'Genel'} — ${n.topic || ''}</span>
+                        <button onclick="removeWrongNote(${i})" class="text-slate-400 hover:text-rose-500 text-xs transition">✕</button>
+                    </div>
+                    <p class="text-xs font-bold text-slate-800 dark:text-slate-200 mb-2 leading-relaxed">${n.questionText || ''}</p>
+                    <div class="text-[10px] text-slate-500 dark:text-slate-400 space-y-0.5">
+                        <div>Senin Cevabın: <span class="font-bold text-rose-500">${n.userAnswer || 'Boş'}</span></div>
+                        <div>Doğru Cevap: <span class="font-bold text-emerald-500">${n.correctAnswer || ''}</span></div>
+                    </div>
+                    ${n.explanation ? `<div class="mt-2 p-2 bg-white/60 dark:bg-slate-950/60 rounded-xl border border-slate-100 dark:border-slate-800 text-[10px] text-slate-600 dark:text-slate-300 leading-relaxed"><strong>📖 Açıklama:</strong> ${n.explanation}</div>` : ''}
+                </div>`).join('');
+        }
+
+        window.removeWrongNote = function(index) {
+            if (!localState[currentUser].wrongNotes) return;
+            localState[currentUser].wrongNotes.splice(index, 1);
+            saveProgress();
+            renderWrongNotes('all');
+            showToast("Soru yanlış defterinden silindi.");
+        };
+
+        window.clearWrongNotes = function() {
+            showCustomModal(
+                "Yanlış defterini temizle",
+                "Tüm yanlış sorular silinecek. Bu işlem geri alınamaz.",
+                () => {
+                    localState[currentUser].wrongNotes = [];
+                    saveProgress();
+                    renderWrongNotes('all');
+                    showToast("Yanlış defter temizlendi!");
+                }
+            );
+        };
+
+        // ─── Groq AI Quiz ─────────────────────────────────────────────────────────
+        window.startAiQuiz = function(dayId) {
+            activeDayForQuiz = scheduleData.find(d => d.id === dayId);
+            if (!activeDayForQuiz) return;
+
+            const modal = document.getElementById('quiz-modal');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.remove('scale-95');
+
+            document.getElementById('quiz-title').innerText = activeDayForQuiz.title;
+
+            document.getElementById('quiz-loading').style.display = 'flex';
+            document.getElementById('quiz-error').style.display   = 'none';
+            document.getElementById('quiz-play').style.display    = 'none';
+            document.getElementById('quiz-results').style.display = 'none';
+
+            // Quiz modunu sıfırla
+            setQuizMode('exam');
+            generateAiQuestions();
+        };
+
+        window.closeQuizModal = function() {
+            const modal = document.getElementById('quiz-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.add('scale-95');
+        };
+
+        window.retryQuizGeneration = function() {
+            document.getElementById('quiz-loading').style.display = 'flex';
+            document.getElementById('quiz-error').style.display   = 'none';
+            generateAiQuestions();
+        };
+
+        // ─── Quiz Modu Seçici ─────────────────────────────────────────────────────
+        window.setQuizMode = function(mode) {
+            quizMode = mode;
+            document.getElementById('mode-exam').className  = mode === 'exam'  ? 'mode-pill active-mode' : 'mode-pill';
+            document.getElementById('mode-learn').className = mode === 'learn' ? 'mode-pill active-mode' : 'mode-pill';
+            // Öğrenme modunda cevap verilmişse açıklamayı göster
+            if (mode === 'learn' && currentQuizData.length > 0 && activeQuizAnswers[activeQuizIndex]) {
+                showLearnModeExplanation();
+            } else {
+                document.getElementById('learn-mode-explanation').style.display = 'none';
+            }
+        };
+
+        function showLearnModeExplanation() {
+            const q = currentQuizData[activeQuizIndex];
+            if (!q) return;
+            const expDiv = document.getElementById('learn-mode-explanation');
+            expDiv.style.display = 'block';
+            document.getElementById('learn-mode-explanation-text').innerText = q.explanation || 'Açıklama mevcut değil.';
+        }
+
+        // ─── Groq API Entegrasyonu ────────────────────────────────────────────────
+        async function generateAiQuestions() {
+            const groqKey = localStorage.getItem('kpss_groq_key') || '';
+
+            const promptText = `Sen Türkiye'nin en iyi KPSS soru hazırlama uzmanlarından birisin.
+
+Aşağıdaki çalışma planına %100 sadık kal.
+
+SADECE verilen konularla ilgili soru üret. Test toplamı 30 soru olsun: 15 soru birinci ders, 15 soru ikinci ders.
+
+Sorular KPSS Lisans seviyesinde olsun. Çeldiriciler güçlü olsun. Kolay soru üretme.
+
+ÖSYM'nin daha önceki yıllarda çıkmış sorularına benzer üret.
+
+Sorular yorum ve analiz gerektirsin.
+
+Bugün çalışılan konular:
+${activeDayForQuiz.tasks.join('\n')}
+
+Soruların tamamı yukarıdaki konularla ilgili olmak zorundadır.
+
+Her soru için aşağıdaki alanlar zorunludur:
+- subject (Türkçe/Matematik/Tarih/Coğrafya/Vatandaşlık)
+- topic
+- difficulty ("Orta" veya "Zor")
+- questionText
+- options (A'dan E'ye 5 seçenek, "A) ..." formatında)
+- correctAnswer (sadece harf: "A", "B", "C", "D" veya "E")
+- explanation
+
+SADECE JSON döndür. Başka hiçbir açıklama yazma.
+
+JSON formatı:
+{
+  "questions":[
+    {
+      "subject":"Türkçe",
+      "topic":"Sözcükte Anlam",
+      "difficulty":"Orta",
+      "questionText":"Soru metni",
+      "options":["A) Seçenek","B) Seçenek","C) Seçenek","D) Seçenek","E) Seçenek"],
+      "correctAnswer":"A",
+      "explanation":"Açıklama"
+    }
+  ]
+}`;
+
+            try {
+                let response;
+
+                if (groqKey) {
+                    // Doğrudan Groq API
+                    response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${groqKey}`
+                        },
+                        body: JSON.stringify({
+                            model: "llama-3.3-70b-versatile",
+                            messages: [{ role: "user", content: promptText }],
+                            temperature: 0.7,
+                            max_tokens: 8000
+                        })
+                    });
+                } else {
+                    // Proxy endpoint (sunucu tarafı entegrasyon)
+                    response = await fetch("/api/groq", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ prompt: promptText })
+                    });
+                }
+
+                if (!response.ok) {
+                    const errText = await response.text();
+                    throw new Error(`API hatası ${response.status}: ${errText.substring(0, 200)}`);
+                }
+
+                const result   = await response.json();
+                const rawText  = result.choices?.[0]?.message?.content || "";
+                const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+                if (!jsonMatch) throw new Error("Geçerli JSON bulunamadı. AI yanıtı: " + rawText.substring(0, 100));
+
+                const parsed = JSON.parse(jsonMatch[0]);
+                currentQuizData   = parsed.questions || [];
+                activeQuizAnswers = Array(currentQuizData.length).fill(null);
+                activeQuizIndex   = 0;
+
+                if (currentQuizData.length > 0) {
+                    showQuestion();
+                } else {
+                    throw new Error("Yetersiz soru üretildi.");
+                }
+            } catch (err) {
+                console.error("Groq API Hatası:", err);
+                document.getElementById('quiz-loading').style.display = 'none';
+                document.getElementById('quiz-error').style.display   = 'flex';
+                document.getElementById('quiz-error-msg').innerText   =
+                    groqKey
+                    ? `Groq API hatası: ${err.message}`
+                    : `AI bağlantısı kurulamadı: ${err.message}. Ayarlar menüsünden Groq API anahtarınızı girerek sınavı aktif edebilirsiniz.`;
+            }
+        }
+
+        // ─── Quiz UI ──────────────────────────────────────────────────────────────
+        function showQuestion() {
+            document.getElementById('quiz-loading').style.display = 'none';
+            document.getElementById('quiz-play').style.display    = 'block';
+
+            const q = currentQuizData[activeQuizIndex];
+            document.getElementById('quiz-subject').innerText      = q.subject || 'KPSS';
+            document.getElementById('quiz-difficulty').innerText   = q.difficulty || 'Orta';
+            document.getElementById('quiz-counter').innerText      = `Soru ${activeQuizIndex + 1} / ${currentQuizData.length}`;
+            document.getElementById('quiz-question-text').innerText = q.questionText;
+
+            // İlerleme çubuğu
+            const pct = Math.round(((activeQuizIndex + 1) / currentQuizData.length) * 100);
+            document.getElementById('quiz-progress-bar').style.width = pct + '%';
+
+            const optionsContainer = document.getElementById('quiz-options-container');
+            optionsContainer.innerHTML = '';
+            const prefixes = ['A', 'B', 'C', 'D', 'E'];
+            const userAnswer = activeQuizAnswers[activeQuizIndex];
+
+            q.options.forEach((opt, idx) => {
+                const prefix     = prefixes[idx];
+                const isSelected = userAnswer === prefix;
+                const isCorrect  = q.correctAnswer === prefix;
+                const btn        = document.createElement('button');
+
+                let btnClass = 'w-full text-left p-3.5 rounded-2xl border text-xs sm:text-sm font-semibold transition-all duration-200 ';
+
+                if (quizMode === 'learn' && userAnswer) {
+                    // Öğrenme modunda renk göster
+                    if (isCorrect) {
+                        btnClass += 'answer-correct answer-correct-indicator';
+                    } else if (isSelected && !isCorrect) {
+                        btnClass += 'answer-wrong answer-wrong-indicator';
+                    } else {
+                        btnClass += 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300';
+                    }
+                } else if (isSelected) {
+                    btnClass += 'border-indigo-600 bg-indigo-50/50 text-indigo-900 dark:border-indigo-500 dark:bg-indigo-950/40 dark:text-indigo-200 font-bold';
+                } else {
+                    btnClass += 'border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-950/60 text-slate-700 dark:text-slate-300';
+                }
+
+                btn.className = btnClass;
+                btn.innerHTML = `<span class="inline-block w-6 h-6 bg-slate-100 dark:bg-slate-800 rounded-lg text-center leading-6 mr-2 font-mono">${prefix}</span> ${opt}`;
+                btn.onclick   = () => selectOption(prefix);
+                optionsContainer.appendChild(btn);
+            });
+
+            document.getElementById('quiz-prev-btn').style.visibility = activeQuizIndex === 0 ? 'hidden' : 'visible';
+            document.getElementById('quiz-next-btn').innerText = activeQuizIndex === currentQuizData.length - 1 ? 'Sınavı Bitir ✓' : 'Sonraki ▶';
+
+            // Öğrenme modunda açıklamayı göster
+            if (quizMode === 'learn' && userAnswer) {
+                showLearnModeExplanation();
+            } else {
+                document.getElementById('learn-mode-explanation').style.display = 'none';
+            }
+        }
+
+        window.selectOption = function(prefix) {
+            activeQuizAnswers[activeQuizIndex] = prefix;
+            showQuestion();
+        };
+        window.prevQuestion = function() { if (activeQuizIndex > 0) { activeQuizIndex--; showQuestion(); } };
+        window.nextQuestion = function() {
+            if (activeQuizIndex < currentQuizData.length - 1) { activeQuizIndex++; showQuestion(); }
+            else finishQuiz();
+        };
+
+        function finishQuiz() {
+            document.getElementById('quiz-play').style.display    = 'none';
+            document.getElementById('quiz-results').style.display = 'block';
+
+            let correctCount = 0;
+            const subjectMap = {};
+
+            currentQuizData.forEach((q, idx) => {
+                const isCorrect = activeQuizAnswers[idx] === q.correctAnswer;
+                if (isCorrect) correctCount++;
+
+                // Konu bazlı istatistik
+                const subj = q.subject || 'Genel';
+                if (!subjectMap[subj]) subjectMap[subj] = { correct: 0, total: 0 };
+                subjectMap[subj].total++;
+                if (isCorrect) subjectMap[subj].correct++;
+            });
+
+            const total = currentQuizData.length;
+            const rate  = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+
+            // Emoji seç
+            let emoji = '😟';
+            if (rate >= 80) emoji = '🏆';
+            else if (rate >= 60) emoji = '👍';
+            else if (rate >= 40) emoji = '📚';
+            document.getElementById('quiz-result-emoji').innerText = emoji;
+
+            document.getElementById('quiz-score-summary').innerText =
+                `${total} sorudan ${correctCount} doğru, ${total - correctCount} yanlış yanıtladın. (Başarı: %${rate})`;
+
+            // Konu özeti
+            const breakdownEl = document.getElementById('quiz-subject-breakdown');
+            const colors = { 'Türkçe': '#6366f1', 'Matematik': '#10b981', 'Tarih': '#f43f5e', 'Coğrafya': '#14b8a6', 'Vatandaşlık': '#f59e0b' };
+            breakdownEl.innerHTML = Object.entries(subjectMap).map(([subj, stat]) => {
+                const pct   = Math.round((stat.correct / stat.total) * 100);
+                const color = colors[subj] || '#6366f1';
+                return `
+                    <div class="subject-bar-wrap">
+                        <div class="flex justify-between text-xs font-semibold">
+                            <span class="text-slate-700 dark:text-slate-300">${subj}</span>
+                            <span style="color:${color}" class="font-extrabold">${stat.correct}/${stat.total} (%${pct})</span>
+                        </div>
+                        <div class="subject-bar-bg">
+                            <div style="height:100%;border-radius:999px;background:${color};width:${pct}%;"></div>
+                        </div>
+                    </div>`;
+            }).join('');
+
+            // Zayıf konu uyarısı
+            let weakSubj = null, weakRate = 100;
+            Object.entries(subjectMap).forEach(([subj, stat]) => {
+                const r = Math.round((stat.correct / stat.total) * 100);
+                if (r < weakRate) { weakRate = r; weakSubj = subj; }
+            });
+            if (weakSubj && weakRate < 60) {
+                document.getElementById('quiz-weak-subject').classList.remove('hidden');
+                document.getElementById('quiz-weak-subject-text').innerText = `⚠️ En Zayıf Alan: ${weakSubj} (%${weakRate}) — Bu konuya daha fazla çalışmalısın!`;
+            }
+
+            // Koç tavsiyesi
+            const coachDiv = document.getElementById('quiz-coach-advice');
+            coachDiv.classList.remove('hidden');
+            let advice = '';
+            if (rate >= 80)      advice = '🎉 Harika bir performans! Bu tempoyu koru ve deneme sınavlarına devam et.';
+            else if (rate >= 60) advice = '👍 İyi gidiyorsun! Yanlış yaptığın konuları yanlış defterinden tekrar et.';
+            else if (rate >= 40) advice = '📚 Konuları bir kez daha çalışman gerekiyor. Yanlış defterini düzenli tut.';
+            else                 advice = '💪 Endişelenme! Bu konuları baştan çalış ve tekrar sınava gir.';
+            document.getElementById('quiz-coach-text').innerText = advice;
+
+            // Detaylı çözümler
+            const reviewContainer = document.getElementById('quiz-review-container');
+            reviewContainer.innerHTML = '';
+            currentQuizData.forEach((q, idx) => {
+                const isCorrect = activeQuizAnswers[idx] === q.correctAnswer;
+                const card      = document.createElement('div');
+                card.className  = `p-4 rounded-2xl border text-xs sm:text-sm ${isCorrect ? 'border-emerald-200 bg-emerald-50/30 dark:border-emerald-950/40 dark:bg-emerald-950/20' : 'border-rose-200 bg-rose-50/30 dark:border-rose-950/40 dark:bg-rose-950/20'}`;
+                card.innerHTML  = `
+                    <div class="flex justify-between font-extrabold mb-1">
+                        <span class="${isCorrect ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'}">Soru ${idx + 1} — ${isCorrect ? 'Doğru ✓' : 'Yanlış ✗'}</span>
+                        <span class="text-slate-400 font-normal text-[10px]">Konu: ${q.subject || ''}</span>
+                    </div>
+                    <p class="font-extrabold text-slate-800 dark:text-slate-200 mb-2 leading-relaxed">${q.questionText}</p>
+                    <div class="space-y-1 text-xs text-slate-500 dark:text-slate-400 mb-2 font-medium">
+                        <div>Sizin Cevabınız: <span class="font-bold ${isCorrect ? 'text-emerald-600' : 'text-rose-500'}">${activeQuizAnswers[idx] || 'Boş'}</span></div>
+                        <div>Doğru Cevap: <span class="font-bold text-emerald-600 dark:text-emerald-400">${q.correctAnswer}</span></div>
+                    </div>
+                    <div class="bg-white/60 dark:bg-slate-950/60 p-3 rounded-xl border border-slate-100 dark:border-slate-800 text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+                        <strong>📖 Açıklamalı Çözüm:</strong> ${q.explanation}
+                    </div>`;
+                reviewContainer.appendChild(card);
+            });
+
+            // Sınav geçmişine kaydet
+            const historyEntry = {
+                date:     new Date().toLocaleDateString('tr-TR'),
+                dayTitle: activeDayForQuiz ? activeDayForQuiz.title : 'Sınav',
+                total:    total,
+                correct:  correctCount,
+                subjects: subjectMap
+            };
+            if (!localState[currentUser].quizHistory) localState[currentUser].quizHistory = [];
+            localState[currentUser].quizHistory.push(historyEntry);
+
+            // Yanlış soruları yanlış defterine ekle
+            if (!localState[currentUser].wrongNotes) localState[currentUser].wrongNotes = [];
+            currentQuizData.forEach((q, idx) => {
+                if (activeQuizAnswers[idx] !== q.correctAnswer) {
+                    localState[currentUser].wrongNotes.push({
+                        subject:       q.subject || 'Genel',
+                        topic:         q.topic   || '',
+                        questionText:  q.questionText,
+                        userAnswer:    activeQuizAnswers[idx] || 'Boş',
+                        correctAnswer: q.correctAnswer,
+                        explanation:   q.explanation || ''
+                    });
+                }
+            });
+
+            // Günlük çözülen soru sayısını güncelle
+            localState[currentUser].dailySolved = (localState[currentUser].dailySolved || 0) + total;
+
+            saveProgress();
+            updateGlobalStats();
+            updateDailyGoalUI();
+        }
+
+        // ─── Custom Confirm Modal ─────────────────────────────────────────────────
+        let confirmAction = null;
+        function showCustomModal(title, desc, onConfirm) {
+            const modal = document.getElementById('custom-modal');
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-desc').innerText  = desc;
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.remove('scale-95');
+            confirmAction = () => { onConfirm(); closeCustomModal(); };
+        }
+        function closeCustomModal() {
+            const modal = document.getElementById('custom-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.querySelector('div').classList.add('scale-95');
+            confirmAction = null;
+        }
+        document.getElementById('modal-cancel-btn').addEventListener('click', closeCustomModal);
+        document.getElementById('modal-confirm-btn').addEventListener('click', () => { if (confirmAction) confirmAction(); });
+
+        window.resetProgress = function() {
+            showCustomModal(
+                "Verileri sıfırlamak istiyor musunuz?",
+                "Bu işlem Melih ve Buse odalarındaki tüm çalışma işaretlerini, sınav geçmişini ve net puan ayarlarını sıfırlar.",
+                () => {
+                    localState = {
+                        melih: { checkedTasks: {}, notes: "", scores: { tur: 25, mat: 18, tar: 20, cog: 12, vat: 10 }, netHistory: [], quizHistory: [], wrongNotes: [], dailyGoal: 100, dailySolved: 0 },
+                        buse:  { checkedTasks: {}, notes: "", scores: { tur: 24, mat: 15, tar: 22, cog: 14, vat: 11 }, netHistory: [], quizHistory: [], wrongNotes: [], dailyGoal: 100, dailySolved: 0 }
+                    };
+                    saveProgress();
+                    updateUIForState();
+                    showToast("Tüm karargah verileri sıfırlandı!");
+                }
+            );
+        };
+
+        // ─── Toast & Theme ────────────────────────────────────────────────────────
+        function showToast(text) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-text').innerText = text;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 2500);
+        }
+
+        window.toggleTheme = function() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('kpss_theme', isDark ? 'dark' : 'light');
+            updateThemeIcons();
+            // Grafik varsa yenile (renk uyumu için)
+            if (netChartInstance) renderNetChart();
+        };
+        function updateThemeIcons() {
+            const isDark = document.documentElement.classList.contains('dark');
+            document.getElementById('theme-icon-light').style.display = isDark ? 'block' : 'none';
+            document.getElementById('theme-icon-dark').style.display  = isDark ? 'none'  : 'block';
+        }
+
+        // ─── PWA Kararlı Başlatma ─────────────────────────────────────────────────
+        window.addEventListener('load', () => {
+            const savedTheme = localStorage.getItem('kpss_theme');
+            if (savedTheme === 'dark') document.documentElement.classList.add('dark');
+            updateThemeIcons();
+            initAppEngine();
+        });
+    </script>
+</body>
+</html>
