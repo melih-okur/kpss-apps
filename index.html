@@ -2087,58 +2087,55 @@ JSON formatı:
         
         window.generateCustomQuiz = async function() {
             const groqKey = "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";
-            const topicsInput = document.getElementById('custom-topics-input').value.trim();
-            const topicsText = topicsInput ? `Konular: ${topicsInput}` : `Dersin tum konularindan`;
-            
-            const promptText = `Sen KPSS sinav sorularinin en usta yazarisi. OSYM'nin metodolojisini mukemmel sekilde takip edersin.
+            const topicsInput = document.getElementById("custom-topics-input").value.trim();
+            const topicsText = topicsInput ? `Konular: ${topicsInput}` : `Dersin tüm konularından`;
 
-Sen KPSS sınav sorularının en usta yazarısın. ÖSYM'nin metodolojisini mükemmel şekilde takip edersin. Görevin, verilen konular ve kriterler doğrultusunda, analitik düşünme ve yorumlama becerisi gerektiren, KPSS Lisans seviyesinde sorular üretmektir.
+            const promptText = `Sen KPSS sınav sorularının en usta yazarısın. ÖSYM'nin metodolojisini mükemmel şekilde takip edersin. Görevin, verilen konular ve kriterler doğrultusunda, analitik düşünme ve yorumlama becerisi gerektiren, KPSS Lisans seviyesinde sorular üretmektir.
 
-🎯 **KRİTİK KURALLAR:**
-1.  **Konu Kapsamı:** SADECE belirtilen `subject` dersinden ve `topics` listesindeki konulardan soru yaz. Konu dışına kesinlikle çıkma.
-2.  **Zorluk Seviyesi:** Belirtilen `difficulty` seviyesine (Orta veya Zor) uygun sorular hazırla.
-3.  **Soru Sayısı:** Tam olarak `questionCount` kadar soru üret.
-4.  **Düşünme Becerisi:** Her soru YORUM, ANALİZ ve KAVRAM UYGULAMASI gerektirsin. Ezber bilgiye dayalı, doğrudan tanım veya hatırlama sorularından KESİNLİKLE kaçın.
-5.  **Soru Formatları:** Sorularını aşağıdaki formatlarda çeşitlendir:
-    *   **Öncüllü (I, II, III):** "Aşağıdakilerden hangileri doğrudur?" veya "Hangileri bu durumun sonucu olabilir?" gibi ifadelerle.
-    *   **Yargı-Yorum:** "Bu gelişmenin temel sebebi nedir?" veya "Bu politikanın amacı aşağıdakilerden hangisidir?" gibi ifadelerle.
-    *   **Kavram Analizi:** "X kavramının Y dönemindeki anlamı nedir?" (tarihsel, sosyolojik vb. bağlamda) gibi ifadelerle.
-6.  **Çeldiriciler:** Seçeneklerdeki çeldiriciler GÜÇLÜ olsun. Doğru cevaba çok benzeyen, ancak kronolojik, mantıksal veya kavramsal olarak hatalı olan şıklar ekle. Adayın dikkatini dağıtacak ve derinlemesine düşünmesini sağlayacak yapıda olsun.
-7.  **Dil ve Üslup:** Akademik, resmi ve objektif bir dil kullan. ÖSYM'nin soru metinlerinde kullandığı üslubu birebir yansıt. Örneğin, "Padişah şunu yaptı" yerine "Osmanlı devlet idaresinde merkeziyetçi yapıyı güçlendirmek amacıyla..." gibi ifadeler tercih et.
-8.  **Seviye:** Sorular KPSS Lisans düzeyinde, ÖSYM'nin güncel sınav formatına ve analitik düşünme gerektiren yapısına uygun olsun.
+            🎯 KRİTİK KURALLAR:
+             1.  Konu Kapsamı: SADECE 
+             - subject: ${customTestConfig.subject}
+             - topics: ${topicsText}
+             dersinden ve yukarıdaki konulardan soru yaz. Konu dışına kesinlikle çıkma.
+             2.  Zorluk Seviyesi: Belirtilen difficulty seviyesine (${customTestConfig.difficulty}) uygun sorular hazırla.
+             3.  Soru Sayısı: Tam olarak ${customTestConfig.questionCount} kadar soru üret.
+             4.  Düşünme Becerisi: Her soru YORUM, ANALİZ ve KAVRAM UYGULAMASI gerektirsin. Ezber bilgiye dayalı, doğrudan tanım veya hatırlama sorularından KESİNLİKLE kaçın.
+             5.  Soru Formatları: Sorularını aşağıdaki formatlarda çeşitlendir:
+             *   Öncüllü (I, II, III): "Aşağıdakilerden hangileri doğrudur?" veya "Hangileri bu durumun sonucu olabilir?" gibi ifadelerle.
+             *   Yargı-Yorum: "Bu gelişmenin temel sebebi nedir?" veya "Bu politikanın amacı aşağıdakilerden hangisidir?" gibi ifadelerle.
+             *   Kavram Analizi: "X kavramının Y dönemindeki anlamı nedir?" (tarihsel, sosyolojik vb. bağlamda) gibi ifadelerle.
+             6.  Çeldiriciler: Seçeneklerdeki çeldiriciler GÜÇLÜ olsun. Doğru cevaba çok benzeyen, ancak kronolojik, mantıksal veya kavramsal olarak hatalı olan şıklar ekle. Adayın dikkatini dağıtacak ve derinlemesine düşünmesini sağlayacak yapıda olsun.
+             7.  Dil ve Üslup: Akademik, resmi ve objektif bir dil kullan. ÖSYM'nin soru metinlerinde kullandığı üslubu birebir yansıt. Örneğin, "Padişah şunu yaptı" yerine "Osmanlı devlet idaresinde merkeziyetçi yapıyı güçlendirmek amacıyla..." gibi ifadeler tercih et.
+             8.  Seviye: Sorular KPSS Lisans düzeyinde, ÖSYM'nin güncel sınav formatına ve analitik düşünme gerektiren yapısına uygun olsun.
 
-📚 **GEREKLİ BİLGİLER (Soru Üretimi İçin):**
-*   `subject`: `${customTestConfig.subject}`
-*   `topics`: `${topicsText}`
-*   `difficulty`: `${customTestConfig.difficulty}`
-*   `questionCount`: `${customTestConfig.questionCount}`
+             Her soru için aşağıdaki alanlar zorunludur ve eksiksiz doldurulmalıdır:
+             *   subject (Ders adı: Türkçe/Matematik/Tarih/Coğrafya/Vatandaşlık)
+             *   topic (Sorunun ilgili olduğu alt konu)
+             *   difficulty (Sorunun zorluk seviyesi: "Orta" veya "Zor")
+             *   questionText (Soru metni)
+             *   options (A'dan E'ye 5 seçenek, "A) Seçenek metni" formatında)
+             *   correctAnswer (Doğru cevabın harfi: "A", "B", "C", "D" veya "E")
+             *   explanation (Doğru cevabın ve çeldiricilerin neden yanlış olduğunun akademik ve detaylı açıklaması)
 
-Her soru için aşağıdaki alanlar zorunludur ve eksiksiz doldurulmalıdır:
-*   `subject` (Ders adı: Türkçe/Matematik/Tarih/Coğrafya/Vatandaşlık)
-*   `topic` (Sorunun ilgili olduğu alt konu)
-*   `difficulty` (Sorunun zorluk seviyesi: "Orta" veya "Zor")
-*   `questionText` (Soru metni)
-*   `options` (A'dan E'ye 5 seçenek, "A) Seçenek metni" formatında)
-*   `correctAnswer` (Doğru cevabın harfi: "A", "B", "C", "D" veya "E")
-*   `explanation` (Doğru cevabın ve çeldiricilerin neden yanlış olduğunun akademik ve detaylı açıklaması)
+             ÇIKTI FORMATI:
+             SADECE JSON formatında yanıt döndür. Başka hiçbir açıklama, giriş veya çıkış metni yazma.
 
-**ÇIKTI FORMATI:**
-SADECE JSON formatında yanıt döndür. Başka hiçbir açıklama, giriş veya çıkış metni yazma.
-
-```json
-{
-  "questions":[
+             ```json
     {
-      "subject":"${customTestConfig.subject}",
-      "topic":"Konu Adı",
-      "difficulty":"${customTestConfig.difficulty}",
-      "questionText":"Soru metni",
-      "options":["A) Seçenek metni","B) Seçenek metni","C) Seçenek metni","D) Seçenek metni","E) Seçenek metni"],
-      "correctAnswer":"A",
-      "explanation":"Açıklama metni"
-    }
-  ]
-}`;
+            "questions":[
+        {
+             "subject":"${customTestConfig.subject}",
+             "topic":"Konu Adı",
+             "difficulty":"${customTestConfig.difficulty}",
+             "questionText":"Soru metni",
+             "options":["A) Seçenek metni","B) Seçenek metni","C) Seçenek metni","D) Seçenek metni","E) Seçenek metni"],
+             "correctAnswer":"A",
+             "explanation":"Açıklama metni"
+         }
+      ]
+   }
+```
+`;`` ;
             
             try {
                 showToast('Test hazirlaniyor...');
