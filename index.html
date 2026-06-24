@@ -768,10 +768,31 @@
         // ─── Anthropic Claude API Entegrasyonu ─────────────────────────────────────
         async function generateAiQuestions() {
             const promptText = `
-Sen deneyimli bir KPSS öğretmenisin.
+Sen Türkiye'nin en iyi KPSS soru hazırlama uzmanlarından birisin.
 
-"${activeDayForQuiz.title}" konusunu kapsayan
-ÖSYM standartlarında 15 adet çoktan seçmeli soru hazırla.
+Aşağıdaki çalışma planına %100 sadık kal.
+
+SADECE verilen konularla ilgili soru üret.
+
+Verilen konuların dışına çıkma.
+
+Sorular KPSS Lisans seviyesinde olsun.
+
+Çeldiriciler güçlü olsun.
+
+Kolay soru üretme.
+
+Sorular yorum ve analiz gerektirsin.
+
+Bugün çalışılan konular:
+
+${activeDayForQuiz.tasks.join('\n')}
+
+Soruların tamamı yukarıdaki konularla ilgili olmak zorundadır.
+
+Listede olmayan hiçbir konudan soru üretme.
+
+Her sorunun "topic" alanı yukarıdaki konulardan biri olmalıdır.
 
 Her soru için aşağıdaki alanlar zorunludur:
 
@@ -784,6 +805,7 @@ Her soru için aşağıdaki alanlar zorunludur:
 - explanation
 
 difficulty sadece:
+
 "Kolay"
 "Orta"
 "Zor"
@@ -792,24 +814,26 @@ olarak dönsün.
 
 SADECE JSON dön.
 
-ÖRNEK:
+Başka hiçbir açıklama yazma.
+
+JSON formatı aşağıdaki gibi olmalıdır:
 
 {
   "questions":[
     {
-      "subject":"Matematik",
-      "topic":"Yüzde Problemleri",
+      "subject":"Türkçe",
+      "topic":"Sözcükte Anlam",
       "difficulty":"Orta",
-      "questionText":"Bir ürün...",
+      "questionText":"Soru metni",
       "options":[
-        "A) ...",
-        "B) ...",
-        "C) ...",
-        "D) ...",
-        "E) ..."
+        "A) Seçenek",
+        "B) Seçenek",
+        "C) Seçenek",
+        "D) Seçenek",
+        "E) Seçenek"
       ],
-      "correctAnswer":"B",
-      "explanation":"..."
+      "correctAnswer":"A",
+      "explanation":"Açıklama"
     }
   ]
 }
