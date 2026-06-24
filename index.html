@@ -310,21 +310,21 @@
             </div>
         </div>
 
-        <div id="master-hero-banner" class="relative overflow-hidden rounded-3xl p-6 md:p-8 mb-6 transition-all duration-500 shadow-xl border border-slate-800 bg-slate-950 text-white">
+        <div id="master-hero-banner" class="relative overflow-hidden rounded-3xl p-6 md:p-8 mb-6 transition-all duration-500 shadow-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 text-slate-900 dark:text-white">
             <div class="absolute -right-10 -top-10 w-44 h-44 rounded-full blur-3xl opacity-20 bg-indigo-500"></div>
             <div class="absolute -left-10 -bottom-10 w-44 h-44 rounded-full blur-3xl opacity-20 bg-rose-500"></div>
 
             <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                 <div class="space-y-2">
-                    <span id="hero-badge" class="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-950/40 text-indigo-400"></span>
-                    <h2 id="hero-title" class="text-2xl md:text-3xl font-extrabold tracking-tight text-white"></h2>
-                    <p id="hero-desc" class="text-xs md:text-sm text-slate-400 max-w-2xl leading-relaxed"></p>
+                    <span id="hero-badge" class="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-100 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400"></span>
+                    <h2 id="hero-title" class="text-2xl md:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white"></h2>
+                    <p id="hero-desc" class="text-xs md:text-sm text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed"></p>
                 </div>
                 
-                <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl min-w-[180px] text-center shadow-lg relative overflow-hidden">
-                    <span class="text-[10px] font-black text-slate-400 tracking-widest uppercase block relative z-10">KAMP TAMAMLANMA</span>
-                    <span id="overall-percentage" class="text-4xl font-black text-emerald-400 block mt-1 relative z-10 drop-shadow-sm">%0</span>
-                    <div class="w-full bg-slate-800 h-1.5 rounded-full mt-3 overflow-hidden relative z-10">
+                <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 rounded-2xl min-w-[180px] text-center shadow-lg relative overflow-hidden">
+                    <span class="text-[10px] font-black text-slate-500 dark:text-slate-400 tracking-widest uppercase block relative z-10">KAMP TAMAMLANMA</span>
+                    <span id="overall-percentage" class="text-4xl font-black text-emerald-500 dark:text-emerald-400 block mt-1 relative z-10 drop-shadow-sm">%0</span>
+                    <div class="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded-full mt-3 overflow-hidden relative z-10">
                         <div id="overall-bar" class="bg-emerald-400 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
                     </div>
                 </div>
@@ -443,30 +443,7 @@
                     </div>
                 </div>
 
-                <!-- Başarı Rozetleri -->
-                <div class="bg-white dark:bg-slate-900 rounded-3xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm">
-                    <h3 class="font-black text-xs text-slate-900 dark:text-slate-200 uppercase tracking-wider mb-3 flex items-center gap-2">
-                        ⭐ Başarı Rozetleri
-                    </h3>
-                    <div id="badges-container" class="badge-container">
-                        <div class="badge locked" title="50 soru çöz">
-                            <span>🎯</span>
-                            <span>Başlangıç</span>
-                        </div>
-                        <div class="badge locked" title="100 soru çöz">
-                            <span>🚀</span>
-                            <span>Momentum</span>
-                        </div>
-                        <div class="badge locked" title="%80 başarı oranı">
-                            <span>🏅</span>
-                            <span>Yüksek Başarı</span>
-                        </div>
-                        <div class="badge locked" title="Tüm konuları tamamla">
-                            <span>🎓</span>
-                            <span>Bilgeci</span>
-                        </div>
-                    </div>
-                </div>
+
 
             </div>
 
@@ -881,7 +858,7 @@
             const savedRoomId         = localStorage.getItem('kpss_room_id') || "";
             
             document.getElementById('input-room-id').value  = savedRoomId || "melih-buse-2026";
-            document.getElementById('input-groq-key').value = '';
+            document.getElementById('input-groq-key').value = localStorage.getItem('kpss_groq_key') || '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';
 
             if (savedRoomId.trim() !== "") customAppId = savedRoomId.trim();
 
@@ -1051,7 +1028,7 @@
             const careerCard = document.getElementById('career-card');
 
             if (currentUser === 'melih') {
-                badge.className = "inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-950/40 text-indigo-400";
+                badge.className = "inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-100 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400";
                 badge.innerText = "💻 Melih'in Odası";
                 title.innerText = "Melih'in KPSS Rehberi";
                 desc.innerText  = "Yönetim Bilişim Sistemleri mezunu Melih için 4431 nitelik koduyla atanmayı sağlayacak en stratejik program. Konu analizlerini bitir ve yazılım/sistem kadrolarını garantile kanka!";
@@ -1066,7 +1043,7 @@
                         <li>🎯 <strong class="text-slate-800 dark:text-slate-200">Bilgisayar İşletmeni / VHKİ:</strong> Bilgi işlem dairelerinde kararlı ve konforlu memurluk kadroları.</li>
                     </ul>`;
             } else {
-                badge.className = "inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full border border-rose-500/30 bg-rose-950/40 text-rose-400";
+                badge.className = "inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider px-3 py-1 rounded-full border border-rose-500/30 bg-rose-100 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400";
                 badge.innerText = "🎨 Tasarım ve Görsel İletişim Masası";
                 title.innerText = "Buse'nin KPSS Rehberi";
                 desc.innerText  = "Görsel İletişim Tasarımı mezunu Buse için Kültür Bakanlığı, TRT ve üniversitelerin kreatif kadrolarında yer almasını sağlayacak özel tasarım programı. KPSS'yi estetikle fethedeceğiz sevgilim!";
@@ -1516,7 +1493,7 @@
 
         // ─── Groq API Entegrasyonu ────────────────────────────────────────────────
         async function generateAiQuestions() {
-            const groqKey = localStorage.getItem('kpss_groq_key') || '';
+            const groqKey = localStorage.getItem('kpss_groq_key') || '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';
 
             const promptText = `Sen Türkiye'nin en iyi KPSS soru hazırlama uzmanlarından birisin.
 
@@ -1574,7 +1551,7 @@ JSON formatı:
                         "Authorization": `Bearer ${groqKey.trim()}`
                     },
                     body: JSON.stringify({
-                        model: "mixtral-8x7b-32768",
+                        model: "llama-3.3-70b-versatile",
                         messages: [{ role: "user", content: promptText }],
                         temperature: 0.7,
                         max_tokens: 8000,
@@ -1882,32 +1859,7 @@ JSON formatı:
         }
 
         function updateBadges() {
-            const state = localState[currentUser];
-            const badges = document.querySelectorAll('#badges-container .badge');
-            const totalQuestions = Object.keys(state.checkedTasks).length;
-            const quizCount = (state.quizHistory || []).length;
-            const avgRate = quizCount > 0 ? Math.round(state.quizHistory.reduce((s, q) => s + (q.correct / q.total * 100), 0) / quizCount) : 0;
-
-            // Badge 1: Başlangıç (50 soru)
-            if (totalQuestions >= 50 && badges[0]) {
-                badges[0].classList.remove('locked');
-                badges[0].classList.add('unlocked');
-            }
-            // Badge 2: Momentum (100 soru)
-            if (totalQuestions >= 100 && badges[1]) {
-                badges[1].classList.remove('locked');
-                badges[1].classList.add('unlocked');
-            }
-            // Badge 3: Yüksek Başarı (%80)
-            if (avgRate >= 80 && badges[2]) {
-                badges[2].classList.remove('locked');
-                badges[2].classList.add('unlocked');
-            }
-            // Badge 4: Bilgeci (Tüm konuları tamamla)
-            if (quizCount >= 15 && badges[3]) {
-                badges[3].classList.remove('locked');
-                badges[3].classList.add('unlocked');
-            }
+            // Başarı rozetleri kaldırıldı
         }
 
         // ─── Akıllı Rescheduling ──────────────────────────────────────────────────────
