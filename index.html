@@ -767,7 +767,53 @@
 
         // ─── Anthropic Claude API Entegrasyonu ─────────────────────────────────────
         async function generateAiQuestions() {
-            const promptText = `Sen deneyimli bir KPSS öğretmenisin. "${activeDayForQuiz.title}" konusunu kapsayan, ÖSYM standartlarında 15 adet çoktan seçmeli soru hazırla. Her soru için konu adı, soru metni, A/B/C/D/E şıkları, doğru cevap harfi ve açıklama ver. SADECE JSON formatında dön, başka hiçbir şey yazma: {"questions": [{"subject": "Ders", "questionText": "Soru...", "options": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "correctAnswer": "A", "explanation": "Açıklama..."}]}`;
+            const promptText = `
+Sen deneyimli bir KPSS öğretmenisin.
+
+"${activeDayForQuiz.title}" konusunu kapsayan
+ÖSYM standartlarında 15 adet çoktan seçmeli soru hazırla.
+
+Her soru için aşağıdaki alanlar zorunludur:
+
+- subject
+- topic
+- difficulty
+- questionText
+- options
+- correctAnswer
+- explanation
+
+difficulty sadece:
+"Kolay"
+"Orta"
+"Zor"
+
+olarak dönsün.
+
+SADECE JSON dön.
+
+ÖRNEK:
+
+{
+  "questions":[
+    {
+      "subject":"Matematik",
+      "topic":"Yüzde Problemleri",
+      "difficulty":"Orta",
+      "questionText":"Bir ürün...",
+      "options":[
+        "A) ...",
+        "B) ...",
+        "C) ...",
+        "D) ...",
+        "E) ..."
+      ],
+      "correctAnswer":"B",
+      "explanation":"..."
+    }
+  ]
+}
+`;
 
             try {
                const response = await fetch("/.netlify/functions/groq", {
