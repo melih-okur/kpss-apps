@@ -767,7 +767,17 @@
 
         // ─── Anthropic Claude API Entegrasyonu ─────────────────────────────────────
         async function generateAiQuestions() {
-            const currentTopics = activeDayForQuiz.tasks.join("\n");
+   const currentTopics = activeDayForQuiz.tasks
+    .filter(task =>
+        !task.toLowerCase().includes("paragraf") &&
+        !task.toLowerCase().includes("rutin") &&
+        !task.toLowerCase().includes("genel tekrar") &&
+        !task.toLowerCase().includes("deneme") &&
+        !task.toLowerCase().includes("analiz")
+    )
+    .join('\n');
+
+console.log(currentTopics);
 
 const promptText = `
 Sen deneyimli bir KPSS öğretmenisin.
