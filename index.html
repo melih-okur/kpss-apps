@@ -44,14 +44,52 @@
             transition: background-color 0.3s ease, color 0.3s ease;
         }
         .glass-card {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(226, 232, 240, 0.8);
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.55);
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+            transition: background-color 0.3s ease, transform 0.2s ease, border-color 0.3s ease;
+            padding: 1.5rem;
         }
         .dark .glass-card {
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18);
+        }
+        .glass-surface {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.08);
+            transition: all 0.3s ease;
+        }
+        .dark .glass-surface {
+            background: rgba(15, 23, 42, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.16);
+        }
+        .rounded-3xl.bg-white,
+        .rounded-3xl.bg-rgba(255,255,255,0.72);
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 24px;
+            padding: 1.5rem;
+            box-shadow: 0 18px 40px rgba(15,23,42,0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .stat-card:active { transform: scale(0.98); }
+        .dark .stat-card {
+            background: rgba(15,23,42,0.55);
+            border-color: rgba(255,255,255,0.12);
+            box-shadow: 0 18px 40px rgba(0,0,0,0.12
+        .dark .dark\:bg-slate-900.rounded-3xl,
+        .dark .dark\:bg-slate-950.rounded-3xl {
+            background: rgba(15, 23, 42, 0.55) !important;
+            border-color: rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.16);
         }
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
@@ -180,9 +218,19 @@
             background: rgba(15,23,42,0.7);
         }
 
-        /* ── Yanlış defter filtre aktif ── */
-        .wrong-filter-btn {
-            border-radius: 9999px;
+        /* ── Yanlış defter
+            background: rgba(255,255,255,0.72);
+            border: 1px solid rgba(255,255,255,0.45);
+            border-radius: 24px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 20px 50px rgba(15,23,42,0.07);
+        }
+        .competition-card:hover { transform: translateY(-2px); box-shadow: 0 20px 50px rgba(15,23,42,0.12); }
+        .dark .competition-card {
+            background: rgba(15,23,42,0.55);
+            border-color: rgba(255,255,255,0.12);
+       
             padding: 8px 16px;
             font-size: 11px;
             font-weight: 700;
@@ -275,11 +323,16 @@
         .quiz-shell {
             display: flex; flex-direction: column; width: 100%; max-width: 52rem; margin: 0 auto;
             max-height: min(94vh, 920px); height: min(94vh, 920px);
-            background: rgba(255,255,255,0.98); border: 1px solid rgba(226,232,240,0.9);
-            border-radius: 1.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.35);
+            background: rgba(255,255,255,0.9); border: 1px solid rgba(255,255,255,0.35);
+            border-radius: 1.5rem; box-shadow: 0 30px 80px rgba(15,23,42,0.1);
             overflow: hidden; transform: scale(0.98); transition: transform 0.3s ease;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
         }
-        .dark .quiz-shell { background: rgba(15,23,42,0.98); border-color: rgba(51,65,85,0.8); }
+        .dark .quiz-shell {
+            background: rgba(15,23,42,0.88);
+            border-color: rgba(255,255,255,0.12);
+        }
         #quiz-modal:not(.opacity-0) .quiz-shell { transform: scale(1); }
         .quiz-header { flex-shrink: 0; padding: 1rem 1.25rem; border-bottom: 1px solid rgba(226,232,240,0.8); background: inherit; }
         .dark .quiz-header { border-color: rgba(51,65,85,0.6); }
