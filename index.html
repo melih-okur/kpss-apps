@@ -938,7 +938,7 @@
                 firebase.auth().signInAnonymously().then(() => {
                     isOnline = true;
                     document.getElementById('sync-dot').className    = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
-                    document.getElementById('sync-status').innerText = "Bağlantı Aktif: Canlı Eşitleme Yapılıyor 🟢";
+                    document.getElementById('sync-status').innerText = "Bağlantı Aktif";
                     startRealtimeSync();
                 }).catch(() => setupLocalFallback());
             } catch (e) {
@@ -949,7 +949,7 @@
         function setupLocalFallback() {
             isOnline = false;
             document.getElementById('sync-dot').className    = "w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse";
-            document.getElementById('sync-status').innerText = "Yerel Kayıt Modu (Bağlantı Bekliyor...) 🟡";
+            document.getElementById('sync-status').innerText = "Yerel Kayıt Modu";
             const offlineState = localStorage.getItem('kpss_mb_offline_data_v3');
             if (offlineState) {
                 try {
